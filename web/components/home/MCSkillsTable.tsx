@@ -1,7 +1,8 @@
 "use client";
 import { useState, useMemo } from "react";
 import Link from "next/link";
-import { skills, Skill } from "@/content/skills";
+import { motion, AnimatePresence } from "framer-motion";
+import { skills } from "@/content/skills";
 import { domains } from "@/content/domains";
 
 export function MCSkillsTable() {
@@ -9,59 +10,51 @@ export function MCSkillsTable() {
   const [search, setSearch] = useState<string>("");
 
   const filteredSkills = useMemo(() => {
-    return skills.filter((s: Skill) => {
+    return skills.filter((s) => {
       const matchDomain = activeTab === "all" || s.domain === activeTab;
-      const q = search.toLowerCase().trim();
       const matchSearch =
-        !q ||
-        s.name.toLowerCase().includes(q) ||
-        s.command.toLowerCase().includes(q) ||
-        s.description.toLowerCase().includes(q) ||
-        s.domain.toLowerCase().includes(q);
+        search === "" ||
+        s.name.toLowerCase().includes(search.toLowerCase()) ||
+        s.description.toLowerCase().includes(search.toLowerCase()) ||
+        s.command.toLowerCase().includes(search.toLowerCase()) ||
+        s.domain.toLowerCase().includes(search.toLowerCase());
       return matchDomain && matchSearch;
     });
   }, [activeTab, search]);
 
   return (
-    <section id="skills-table" style={{ paddingBottom: 24 }}>
-      {/* Header */}
+    <section id="skills-table" style={{ borderBottom: "1px solid var(--border)", paddingBottom: 40 }}>
+      {/* Section Head */}
       <div className="table-section-head">
         <div>
-          <div style={{ fontSize: 10, color: "var(--text3)", fontFamily: "var(--font-geist-mono)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 6 }}>
-            [ SECURITY ANALYSIS ]
+          <div style={{ fontSize: 10, color: "var(--text3)", fontFamily: "var(--font-geist-mono)", letterSpacing: "0.1em", textTransform: "uppercase", marginBottom: 10 }}>
+            [ 51 PRODUCTION-READY SECURITY CONTEXTS ]
           </div>
-          <div style={{ fontSize: 12, fontFamily: "var(--font-geist-mono)", color: "var(--text2)", letterSpacing: "0.05em" }}>
-            51 SKILLS · CLAUDE CODE · DAILY PATTERNS
-          </div>
+          <h2 style={{ fontSize: 30, fontWeight: 900, textTransform: "uppercase", letterSpacing: "-0.5px", lineHeight: 1.1 }}>
+            SKILL DIRECTORY
+          </h2>
         </div>
         <div style={{ fontSize: 10, color: "var(--text3)", fontFamily: "var(--font-geist-mono)", letterSpacing: "0.08em" }}>
-          &gt; FILTER (↕↓)
+          {filteredSkills.length} of {skills.length} SKILLS DISPLAYED
         </div>
       </div>
 
-      {/* Filter and Search Bar */}
+      {/* Filter / Search Bar */}
       <div className="table-filter-bar">
-        {/* Search */}
+        {/* Search Input */}
         <div className="table-search-input">
           <svg
-            style={{
-              position: "absolute",
-              left: 10,
-              top: "50%",
-              transform: "translateY(-50%)",
-              width: 14,
-              height: 14,
-              stroke: "var(--text3)",
-              fill: "none",
-            }}
+            style={{ position: "absolute", left: 10, top: "50%", transform: "translateY(-50%)", width: 14, height: 14, color: "var(--text3)" }}
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
             viewBox="0 0 24 24"
-            strokeWidth="2"
+            stroke="currentColor"
           >
-            <circle cx="11" cy="11" r="8" />
-            <path d="m21 21-4.35-4.35" />
+            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
           </svg>
           <input
-            placeholder="Search skill name, command, or vulnerability class..."
+            type="text"
+            placeholder="Search by vulnerability, command (/hunt-sqli), or domain..."
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
@@ -110,72 +103,79 @@ export function MCSkillsTable() {
                   </td>
                 </tr>
               ) : (
-                filteredSkills.map((skill, i) => (
-                  <tr
-                    key={skill.id}
-                    style={{
-                      borderBottom: i < filteredSkills.length - 1 ? "1px solid var(--border)" : "none",
-                      transition: "background 0.1s",
-                      fontSize: 13,
-                    }}
-                  >
-                    <td style={{ padding: "12px 16px", fontFamily: "var(--font-geist-mono)", color: "var(--text3)", fontSize: 11 }}>
-                      {String(i + 1).padStart(2, "0")}
-                    </td>
-                    <td style={{ padding: "12px 16px" }}>
-                      <div style={{ fontWeight: 600, color: "var(--text)", marginBottom: 2 }}>
-                        {skill.name}
-                      </div>
-                      <div style={{ fontSize: 11.5, color: "var(--text2)", maxWidth: 360, lineHeight: 1.4 }}>
-                        {skill.description.slice(0, 75)}...
-                      </div>
-                    </td>
-                    <td style={{ padding: "12px 16px" }}>
-                      <code style={{ fontFamily: "var(--font-geist-mono)", background: "#f4f4f2", border: "1px solid var(--border2)", padding: "2px 7px", borderRadius: 4, fontSize: 11, color: "var(--text)" }}>
-                        {skill.command}
-                      </code>
-                    </td>
-                    <td style={{ padding: "12px 16px", fontFamily: "var(--font-geist-mono)", fontSize: 11.5, color: "var(--text2)" }}>
-                      {skill.domain}
-                    </td>
-                    <td style={{ padding: "12px 16px", textAlign: "center" }}>
-                      <span
-                        style={{
-                          fontFamily: "var(--font-geist-mono)",
-                          fontSize: 10,
-                          padding: "2px 7px",
-                          borderRadius: 10,
-                          fontWeight: 600,
-                          background: skill.env === "both" ? "var(--green-bg)" : skill.env === "chat" ? "var(--orange-bg)" : "var(--purple-bg)",
-                          color: skill.env === "both" ? "var(--green)" : skill.env === "chat" ? "var(--orange)" : "var(--purple)",
-                          border: `1px solid ${skill.env === "both" ? "rgba(22,163,74,0.25)" : skill.env === "chat" ? "rgba(6,96,241,0.25)" : "rgba(124,58,237,0.25)"}`,
-                        }}
-                      >
-                        {skill.env}
-                      </span>
-                    </td>
-                    <td style={{ padding: "12px 16px", textAlign: "right", fontFamily: "var(--font-geist-mono)", fontSize: 11, color: "var(--text3)" }}>
-                      {skill.reportCount ? `${skill.reportCount}` : "—"}
-                    </td>
-                    <td style={{ padding: "12px 16px", textAlign: "right" }}>
-                      <Link
-                        href={`/skills/${skill.id}`}
-                        style={{
-                          fontFamily: "var(--font-geist-mono)",
-                          fontSize: 10,
-                          color: "var(--text)",
-                          border: "1px solid var(--border)",
-                          padding: "4px 8px",
-                          borderRadius: 4,
-                          textDecoration: "none",
-                          fontWeight: 600,
-                        }}
-                      >
-                        VIEW →
-                      </Link>
-                    </td>
-                  </tr>
-                ))
+                <AnimatePresence mode="popLayout" initial={false}>
+                  {filteredSkills.map((skill, i) => (
+                    <motion.tr
+                      key={skill.id}
+                      layout
+                      initial={{ opacity: 0, y: 6 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, scale: 0.98 }}
+                      transition={{ duration: 0.18, ease: "easeOut" }}
+                      style={{
+                        borderBottom: i < filteredSkills.length - 1 ? "1px solid var(--border)" : "none",
+                        fontSize: 13,
+                      }}
+                    >
+                      <td style={{ padding: "12px 16px", fontFamily: "var(--font-geist-mono)", color: "var(--text3)", fontSize: 11 }}>
+                        {String(i + 1).padStart(2, "0")}
+                      </td>
+                      <td style={{ padding: "12px 16px" }}>
+                        <div style={{ fontWeight: 600, color: "var(--text)", marginBottom: 2 }}>
+                          {skill.name}
+                        </div>
+                        <div style={{ fontSize: 11.5, color: "var(--text2)", maxWidth: 360, lineHeight: 1.4 }}>
+                          {skill.description.slice(0, 75)}...
+                        </div>
+                      </td>
+                      <td style={{ padding: "12px 16px" }}>
+                        <code style={{ fontFamily: "var(--font-geist-mono)", background: "#f4f4f2", border: "1px solid var(--border2)", padding: "2px 7px", borderRadius: 4, fontSize: 11, color: "var(--text)" }}>
+                          {skill.command}
+                        </code>
+                      </td>
+                      <td style={{ padding: "12px 16px", fontFamily: "var(--font-geist-mono)", fontSize: 11.5, color: "var(--text2)" }}>
+                        {skill.domain}
+                      </td>
+                      <td style={{ padding: "12px 16px", textAlign: "center" }}>
+                        <span
+                          style={{
+                            fontFamily: "var(--font-geist-mono)",
+                            fontSize: 10,
+                            padding: "2px 7px",
+                            borderRadius: 10,
+                            fontWeight: 600,
+                            background: skill.env === "both" ? "var(--green-bg)" : skill.env === "chat" ? "var(--orange-bg)" : "var(--purple-bg)",
+                            color: skill.env === "both" ? "var(--green)" : skill.env === "chat" ? "var(--orange)" : "var(--purple)",
+                            border: `1px solid ${skill.env === "both" ? "rgba(22,163,74,0.25)" : skill.env === "chat" ? "rgba(6,96,241,0.25)" : "rgba(124,58,237,0.25)"}`,
+                          }}
+                        >
+                          {skill.env}
+                        </span>
+                      </td>
+                      <td style={{ padding: "12px 16px", textAlign: "right", fontFamily: "var(--font-geist-mono)", fontSize: 11, color: "var(--text3)" }}>
+                        {skill.reportCount ? `${skill.reportCount}` : "—"}
+                      </td>
+                      <td style={{ padding: "12px 16px", textAlign: "right" }}>
+                        <Link
+                          href={`/skills/${skill.id}`}
+                          style={{
+                            fontFamily: "var(--font-geist-mono)",
+                            fontSize: 10,
+                            color: "var(--text)",
+                            border: "1px solid var(--border)",
+                            padding: "4px 8px",
+                            borderRadius: 4,
+                            textDecoration: "none",
+                            fontWeight: 600,
+                            transition: "all 0.12s ease",
+                          }}
+                        >
+                          VIEW →
+                        </Link>
+                      </td>
+                    </motion.tr>
+                  ))}
+                </AnimatePresence>
               )}
             </tbody>
           </table>

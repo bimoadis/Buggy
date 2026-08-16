@@ -56,6 +56,32 @@
   padding: 0;
 }
 
+/* ── Custom Brutalist Cyber Scrollbar ── */
+::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg);
+  border-left: 1px solid var(--border);
+}
+
+::-webkit-scrollbar-thumb {
+  background: #c8c8c8;
+  border-radius: 3px;
+  transition: background 0.15s ease;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #888888;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c8c8c8 var(--bg);
+}
+
 body {
   background: var(--bg);
   color: var(--text);
@@ -109,6 +135,43 @@ a {
   to {
     transform: translateX(-50%);
   }
+}
+
+@keyframes cursor-blink {
+  0%, 49% {
+    opacity: 1;
+  }
+  50%, 100% {
+    opacity: 0;
+  }
+}
+
+@keyframes scanline-sweep {
+  0% {
+    transform: translateY(-100%);
+    opacity: 0;
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(200%);
+    opacity: 0;
+  }
+}
+
+@keyframes pulse-glow {
+  0%, 100% {
+    box-shadow: 0 0 10px rgba(6, 96, 241, 0.2);
+  }
+  50% {
+    box-shadow: 0 0 22px rgba(6, 96, 241, 0.45);
+  }
+}
+
+.cyber-dot-bg {
+  background-image: radial-gradient(rgba(10, 10, 10, 0.08) 1px, transparent 1px);
+  background-size: 20px 20px;
 }
 
 /* ── Promo Top Bar ── */
@@ -347,7 +410,7 @@ nav.mainnav a.active {
 
 /* ── Hero ── */
 .hero-section {
-  padding: 52px 28px 44px 0;
+  padding: 52px 28px 44px;
   display: grid;
   grid-template-columns: 1fr 400px;
   gap: 48px;
@@ -779,6 +842,30 @@ h1.hero-title .hl {
   padding: 28px 24px;
   border-right: 1px solid var(--border);
   border-bottom: 1px solid var(--border);
+  position: relative;
+  overflow: hidden;
+  transition: all 0.2s ease;
+}
+
+.domain-feature-cell:hover {
+  background: #fdfdfd;
+  box-shadow: inset 0 0 0 1px rgba(6, 96, 241, 0.35);
+}
+
+.domain-feature-cell .scanline {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: linear-gradient(90deg, transparent, rgba(6, 96, 241, 0.9), transparent);
+  box-shadow: 0 0 10px rgba(6, 96, 241, 0.8);
+  opacity: 0;
+  pointer-events: none;
+}
+
+.domain-feature-cell:hover .scanline {
+  animation: scanline-sweep 1.4s ease-in-out infinite;
 }
 
 .domain-feature-cell:nth-child(3n) {
@@ -1320,4 +1407,158 @@ table.mc-doc-table code {
   .mc-info-cell {
     border-right: none !important;
   }
+}
+
+/* ─── Skill & Domain Hero Layouts ─── */
+.mc-skills-hero {
+  padding: 48px 28px 32px;
+  border-bottom: 1px solid var(--border);
+  max-width: 1400px;
+  margin: 0 auto;
+  background: var(--white);
+}
+
+.mc-page-title {
+  font-size: clamp(28px, 4vw, 42px);
+  font-weight: 900;
+  text-transform: uppercase;
+  letter-spacing: -0.5px;
+  line-height: 1.1;
+  margin: 12px 0 10px;
+  color: var(--text);
+}
+
+.mc-page-desc {
+  font-size: 14px;
+  color: var(--text2);
+  max-width: 680px;
+  line-height: 1.65;
+  margin-bottom: 20px;
+}
+
+.mc-meta-row {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  font-family: var(--font-geist-mono);
+  font-size: 11.5px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.mc-meta-row .dim {
+  color: var(--text3);
+  margin-left: 4px;
+  font-size: 10px;
+}
+
+.mc-cmd-pill {
+  font-family: var(--font-geist-mono);
+  background: #f4f4f2;
+  border: 1px solid var(--border2);
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 12px;
+  color: var(--text);
+  font-weight: 600;
+}
+
+.mc-badge {
+  font-family: var(--font-geist-mono);
+  font-size: 10.5px;
+  font-weight: 700;
+  padding: 3px 9px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+}
+
+.mc-badge-web { background: var(--orange-bg); color: var(--orange); border: 1px solid var(--orange-border); }
+.mc-badge-auth { background: var(--blue-bg); color: var(--blue); }
+.mc-badge-api { background: var(--purple-bg); color: var(--purple); }
+.mc-badge-enterprise { background: var(--pink-bg); color: var(--pink); }
+.mc-badge-red { background: var(--red-bg); color: var(--red); }
+.mc-badge-recon { background: var(--cyan-bg); color: var(--cyan); }
+.mc-badge-reporting { background: var(--green-bg); color: var(--green); }
+.mc-badge-specialized { background: var(--teal-bg); color: var(--teal); }
+
+.mc-env-pill {
+  font-family: var(--font-geist-mono);
+  font-size: 10px;
+  font-weight: 600;
+  padding: 3px 8px;
+  border-radius: 12px;
+}
+
+.mc-env-pill.both { background: var(--green-bg); color: var(--green); border: 1px solid rgba(22, 163, 74, 0.25); }
+.mc-env-pill.chat { background: var(--orange-bg); color: var(--orange); border: 1px solid rgba(6, 96, 241, 0.25); }
+.mc-env-pill.code { background: var(--purple-bg); color: var(--purple); border: 1px solid rgba(124, 58, 237, 0.25); }
+
+.mc-skills-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1px;
+  background: var(--border);
+  max-width: 1400px;
+  margin: 0 auto;
+  border-bottom: 1px solid var(--border);
+}
+
+.mc-skill-card {
+  background: var(--white);
+  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 200px;
+  transition: all 0.15s ease;
+}
+
+.mc-skill-card:hover {
+  background: #fdfdfd;
+}
+
+.mc-skill-body {
+  font-size: 14px;
+  color: var(--text2);
+  line-height: 1.7;
+}
+
+.mc-skill-body p {
+  margin-bottom: 16px;
+}
+
+.mc-skill-body ul, .mc-skill-body ol {
+  margin: 12px 0 16px 20px;
+}
+
+.mc-skill-body li {
+  margin-bottom: 6px;
+}
+
+.mc-btn {
+  font-family: var(--font-geist-mono);
+  font-size: 11px;
+  font-weight: 700;
+  padding: 10px 18px;
+  border-radius: 4px;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  transition: all 0.15s;
+  cursor: pointer;
+}
+
+.mc-btn-primary {
+  background: var(--text);
+  color: var(--white);
+  border: 1px solid var(--text);
+}
+
+.mc-btn-primary:hover {
+  background: #262626;
+  border-color: #262626;
 }

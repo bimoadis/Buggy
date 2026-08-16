@@ -251,18 +251,23 @@ export default function SkillsPage() {
                   <button
                     onClick={() => handleCopy(skill.id, skill.command)}
                     style={{
-                      background: "transparent",
-                      border: "1px solid var(--border)",
+                      background: copiedId === skill.id ? "var(--green)" : "transparent",
+                      border: `1px solid ${copiedId === skill.id ? "var(--green)" : "var(--border)"}`,
                       borderRadius: "var(--radius-sm)",
                       padding: "3px 9px",
                       fontSize: 10,
-                      color: copiedId === skill.id ? "var(--green)" : "var(--text3)",
+                      fontWeight: copiedId === skill.id ? 700 : 500,
+                      color: copiedId === skill.id ? "#fff" : "var(--text3)",
                       cursor: "pointer",
                       fontFamily: "var(--font-geist-mono)",
-                      transition: "all 0.15s",
+                      transform: copiedId === skill.id ? "scale(1.05)" : "scale(1)",
+                      transition: "all 0.15s cubic-bezier(0.34, 1.56, 0.64, 1)",
+                      display: "inline-flex",
+                      alignItems: "center",
+                      gap: 4,
                     }}
                   >
-                    {copiedId === skill.id ? "Copied ✓" : "Copy"}
+                    {copiedId === skill.id ? "✓ Copied!" : "Copy"}
                   </button>
                 </div>
               </div>

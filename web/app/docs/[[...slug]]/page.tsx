@@ -1,6 +1,7 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import { CountUpNumber } from "@/components/CountUpNumber";
 import "@/app/mcptrade.css";
 import { PromoBar } from "@/components/home/PromoBar";
 import { MCNav } from "@/components/home/MCNav";
@@ -111,15 +112,15 @@ export default function DocsPage() {
             <div className="info-grid">
               <div className="info-cell">
                 <div className="info-label">TOTAL SKILLS</div>
-                <div className="info-value">51 Skills</div>
+                <div className="info-value"><CountUpNumber target={51} suffix=" Skills" /></div>
               </div>
               <div className="info-cell">
                 <div className="info-label">ATTACK DOMAINS</div>
-                <div className="info-value">8 Domains</div>
+                <div className="info-value"><CountUpNumber target={8} suffix=" Domains" /></div>
               </div>
               <div className="info-cell">
                 <div className="info-label">DISCLOSED PATTERNS</div>
-                <div className="info-value">574+ H1 Disclosures</div>
+                <div className="info-value"><CountUpNumber target={574} suffix="+ H1 Disclosures" /></div>
               </div>
               <div className="info-cell">
                 <div className="info-label">ENVIRONMENTS</div>

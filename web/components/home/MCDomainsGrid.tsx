@@ -38,6 +38,7 @@ export function MCDomainsGrid() {
       <div className="domains-grid-3">
         {domains.map((domain) => (
           <div key={domain.slug} className="domain-feature-cell">
+            <div className="scanline" />
             <div className="domain-icon-box">
               {DOMAIN_ICONS[domain.slug] || "⬡"}
             </div>

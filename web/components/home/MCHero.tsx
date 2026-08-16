@@ -1,8 +1,72 @@
+"use client";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 
+const LIVE_COMMANDS = [
+  {
+    cmd: 'buggy.hunt("https://target.com")',
+    tag: "SQLI DETECTED",
+    tagBg: "#FEF2F2",
+    tagColor: "#DC2626",
+    output: "Signal matched CWE-89 → Time-based blind injection verified with 8.4s sleep",
+  },
+  {
+    cmd: 'claude.triage(finding="blind-sqli")',
+    tag: "GATE 7/7 PASSED",
+    tagBg: "#F0FDF4",
+    tagColor: "#16A34A",
+    output: "7-Question Gate cleared (7/7) → 0% speculative, submit-ready report generated",
+  },
+  {
+    cmd: 'recon.subdomains("target.com")',
+    tag: "142 ASSETS",
+    tagBg: "#EEF5FF",
+    tagColor: "#0660F1",
+    output: "DNS buffer parsed → 142 live HTTP surfaces categorized with open ports",
+  },
+  {
+    cmd: 'auth.audit_jwt(token="eyJhbGci...")',
+    tag: "AUTH BYPASS",
+    tagBg: "#F5F3FF",
+    tagColor: "#7C3AED",
+    output: "Algorithm 'none' vulnerability confirmed → Privilege elevated to superadmin",
+  },
+];
+
 export function MCHero() {
+  const [index, setIndex] = useState(0);
+  const [displayedText, setDisplayedText] = useState("");
+  const [isTyping, setIsTyping] = useState(true);
+  const [showOutput, setShowOutput] = useState(false);
+
+  const current = LIVE_COMMANDS[index];
+
+  useEffect(() => {
+    let timeout: NodeJS.Timeout;
+    if (isTyping) {
+      if (displayedText.length < current.cmd.length) {
+        timeout = setTimeout(() => {
+          setDisplayedText(current.cmd.slice(0, displayedText.length + 1));
+        }, 40);
+      } else {
+        setShowOutput(true);
+        timeout = setTimeout(() => {
+          setIsTyping(false);
+        }, 2800);
+      }
+    } else {
+      setShowOutput(false);
+      timeout = setTimeout(() => {
+        setDisplayedText("");
+        setIndex((prev) => (prev + 1) % LIVE_COMMANDS.length);
+        setIsTyping(true);
+      }, 300);
+    }
+    return () => clearTimeout(timeout);
+  }, [displayedText, isTyping, current.cmd]);
+
   return (
-    <section className="hero-section">
+    <section className="hero-section cyber-dot-bg">
       {/* Left Column: Headlines & CTAs */}
       <div>
         <div className="hero-eyebrow">
@@ -22,7 +86,7 @@ export function MCHero() {
           disclosures, audited via mandatory 7-Question Gate.
         </p>
 
-        <div className="hero-ctas">
+        <div className="hero-ctas" style={{ marginBottom: 28 }}>
           <a href="#skills-table" className="btn-primary">
             START HUNTING →
           </a>
@@ -30,10 +94,79 @@ export function MCHero() {
             VIEW 51 SKILLS
           </Link>
         </div>
+
+        {/* Live Interactive Terminal Box */}
+        <div
+          style={{
+            background: "var(--term-bg)",
+            border: "1px solid #262626",
+            borderRadius: 8,
+            padding: "14px 18px",
+            fontFamily: "var(--font-geist-mono)",
+            maxWidth: 520,
+            boxShadow: "0 8px 24px rgba(0,0,0,0.12)",
+          }}
+        >
+          <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", marginBottom: 10, borderBottom: "1px solid #1F1F1F", paddingBottom: 8 }}>
+            <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+              <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#ef4444" }} />
+              <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#f59e0b" }} />
+              <div style={{ width: 8, height: 8, borderRadius: "50%", background: "#10b981" }} />
+              <span style={{ fontSize: 10, color: "#666", marginLeft: 6, letterSpacing: "0.06em" }}>
+                BUGGY INTERACTIVE TELEMETRY
+              </span>
+            </div>
+            {showOutput && (
+              <span
+                style={{
+                  fontSize: 9,
+                  fontWeight: 700,
+                  padding: "2px 6px",
+                  borderRadius: 3,
+                  background: current.tagBg,
+                  color: current.tagColor,
+                  letterSpacing: "0.05em",
+                }}
+              >
+                {current.tag}
+              </span>
+            )}
+          </div>
+
+          <div style={{ fontSize: 12.5, color: "#f5f5f5", display: "flex", alignItems: "center", minHeight: 22 }}>
+            <span style={{ color: "var(--orange)", marginRight: 8, fontWeight: 700 }}>&gt;</span>
+            <span style={{ color: "#38bdf8" }}>{displayedText}</span>
+            <span
+              style={{
+                display: "inline-block",
+                width: 7,
+                height: 14,
+                background: "var(--orange)",
+                marginLeft: 4,
+                animation: "cursor-blink 1s infinite",
+              }}
+            />
+          </div>
+
+          <div
+            style={{
+              fontSize: 11,
+              color: "#888",
+              marginTop: 6,
+              minHeight: 18,
+              opacity: showOutput ? 1 : 0,
+              transition: "opacity 0.25s ease",
+              lineHeight: 1.5,
+            }}
+          >
+            <span style={{ color: "#22c55e", marginRight: 6 }}>✓</span>
+            {current.output}
+          </div>
+        </div>
       </div>
 
       {/* Right Column: Live Animated Architecture Diagram */}
-      <div style={{ display: "flex", justifyContent: "center" }}>
+      <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
         <div className="hero-diagram-wrap">
           {/* Animated Connecting SVG Lines */}
           <svg

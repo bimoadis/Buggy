@@ -1,3 +1,6 @@
+"use client";
+import { CountUpNumber } from "@/components/CountUpNumber";
+
 export function MCStatsRow() {
   const domainTags = [
     "WEB HUNTING",
@@ -16,7 +19,9 @@ export function MCStatsRow() {
       <div className="stats-numbers-row">
         {/* Col 1 */}
         <div className="stat-num-col">
-          <div className="stat-large-val green">22</div>
+          <div className="stat-large-val green">
+            <CountUpNumber target={22} />
+          </div>
           <div className="stat-col-title">WEB HUNTING SKILLS</div>
           <div className="stat-pill-tag">
             <span
@@ -36,7 +41,9 @@ export function MCStatsRow() {
 
         {/* Col 2 */}
         <div className="stat-num-col">
-          <div className="stat-large-val red">100%</div>
+          <div className="stat-large-val red">
+            <CountUpNumber target={100} suffix="%" />
+          </div>
           <div className="stat-col-title">7-QUESTION GATE</div>
           <div className="stat-pill-tag">
             <span
@@ -56,7 +63,9 @@ export function MCStatsRow() {
 
         {/* Col 3 */}
         <div className="stat-num-col">
-          <div className="stat-large-val orange">51</div>
+          <div className="stat-large-val orange">
+            <CountUpNumber target={51} />
+          </div>
           <div className="stat-col-title">TOTAL PRODUCTION SKILLS</div>
           <div className="stat-pill-tag">
             <span
@@ -92,7 +101,7 @@ export function MCStatsRow() {
               </span>
             </div>
             <div style={{ background: "var(--border)", height: 5, width: "100%" }}>
-              <div style={{ background: "var(--green)", height: "100%", width: "100%" }} />
+              <div style={{ background: "var(--green)", height: "100%", width: "100%", transition: "width 1.2s ease" }} />
             </div>
           </div>
           <div style={{ marginBottom: 16 }}>
@@ -130,7 +139,10 @@ export function MCStatsRow() {
                   color: "var(--text2)",
                   letterSpacing: "0.05em",
                   textTransform: "uppercase",
+                  transition: "all 0.15s ease",
+                  cursor: "default",
                 }}
+                className="hover-tag"
               >
                 {tag}
               </span>
