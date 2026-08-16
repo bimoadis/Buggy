@@ -6,7 +6,7 @@ import { usePathname } from "next/navigation";
 const LINKS = [
   { label: "Skills", href: "/skills" },
   { label: "Docs",   href: "/docs" },
-  { label: "GitHub", href: "https://github.com/x-cookie/cbughunter-k1", external: true },
+  { label: "GitHub", href: "https://github.com/bimoadis/Buggy", external: true },
 ];
 
 export function Nav() {
@@ -80,7 +80,7 @@ export function Nav() {
 
         {/* CTA */}
         <a
-          href="https://github.com/x-cookie/cbughunter-k1"
+          href="https://github.com/bimoadis/Buggy"
           target="_blank"
           rel="noopener noreferrer"
           style={{

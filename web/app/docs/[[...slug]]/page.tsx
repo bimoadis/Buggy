@@ -84,7 +84,7 @@ export default function DocsPage() {
               Explore 51 Skills →
             </Link>
             <a
-              href="https://github.com/x-cookie/cbughunter-k1"
+              href="https://github.com/bimoadis/Buggy"
               target="_blank"
               rel="noopener noreferrer"
               style={{ color: "var(--text2)", textDecoration: "none" }}
@@ -157,7 +157,7 @@ export default function DocsPage() {
               <span className="lbl"># 1. Install Claude Code</span>
               {"\n"}<span className="kw">npm</span> install -g @anthropic-ai/claude-code
               {"\n\n"}<span className="lbl"># 2. Clone the Buggy Skill Repository</span>
-              {"\n"}<span className="kw">git</span> clone https://github.com/x-cookie/cbughunter-k1 buggy-skills
+              {"\n"}<span className="kw">git</span> clone https://github.com/bimoadis/Buggy.git buggy-skills
               {"\n"}<span className="kw">cd</span> buggy-skills
               {"\n\n"}<span className="lbl"># 3. Launch Claude Code &amp; Start Hunting</span>
               {"\n"}<span className="kw">claude</span>

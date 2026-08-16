@@ -313,7 +313,7 @@ function SkillDetailPage({ skillId }: { skillId: string }) {
           {/* Direct GitHub Links */}
           <div style={{ display: "flex", flexDirection: "column", gap: 8 }}>
             <a
-              href={`https://github.com/x-cookie/cbughunter-k1/tree/main/skills/${folderName}/${skillName}`}
+              href={`https://github.com/bimoadis/Buggy/tree/main/skills/${folderName}/${skillName}`}
               target="_blank"
               rel="noopener noreferrer"
               className="mc-btn mc-btn-primary"

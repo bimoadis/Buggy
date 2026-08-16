@@ -3,7 +3,7 @@ import { useState } from "react";
 
 export function InstallBar() {
   const [copied, setCopied] = useState(false);
-  const command = "git clone https://github.com/x-cookie/cbughunter-k1";
+  const command = "git clone https://github.com/bimoadis/Buggy.git";
 
   const handleCopy = () => {
     navigator.clipboard.writeText(command);

@@ -162,7 +162,7 @@ export function DocsSidebar({ sections, inline }: { sections: Section[]; inline?
       <div style={{ margin: "8px 24px", borderTop: "1px solid var(--b0)" }} />
       <div style={{ padding: "14px 24px", display: "flex", flexDirection: "column", gap: 10 }}>
         <a
-          href="https://github.com/x-cookie/cbughunter-k1"
+          href="https://github.com/bimoadis/Buggy"
           target="_blank"
           rel="noopener noreferrer"
           style={{ fontFamily: "var(--font-mono)", fontSize: 10, color: "rgba(240,240,255,0.22)", textDecoration: "none", letterSpacing: "0.04em" }}

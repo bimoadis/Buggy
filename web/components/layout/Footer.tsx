@@ -54,7 +54,7 @@ export function Footer() {
           {[
             { label: "Quick Start", href: "/docs/quick-start" },
             { label: "Install",     href: "/docs/install" },
-            { label: "GitHub",      href: "https://github.com/x-cookie/cbughunter-k1", external: true },
+            { label: "GitHub",      href: "https://github.com/bimoadis/Buggy", external: true },
           ].map((link) =>
             link.external ? (
               <a key={link.label} href={link.href} target="_blank" rel="noopener noreferrer"

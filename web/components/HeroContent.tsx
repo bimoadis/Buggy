@@ -112,7 +112,7 @@ export function HeroContent() {
             Browse all skills
           </Link>
           <a
-            href="https://github.com/x-cookie/cbughunter-k1"
+            href="https://github.com/bimoadis/Buggy"
             target="_blank"
             rel="noopener noreferrer"
             style={{
