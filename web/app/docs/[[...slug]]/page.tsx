@@ -328,8 +328,8 @@ export default function DocsPage() {
               {"\n"}<span className="kw">**CVSS 3.1:**</span> 9.1 (CVSS:3.1/AV:N/AC:L/PR:N/UI:N/S:U/C:H/I:H/A:N)
               {"\n"}<span className="kw">**7-Question Gate:**</span> CLEARED (7/7)
               {"\n\n"}<span className="fn">### Steps to Reproduce:</span>
-              {"\n"}1. Send GET request with parameter `q=1%20WAITFOR%20DELAY%20'0:0:8'`
-              {"\n"}2. Observe delayed server response of 8.4 seconds.
+              {"\n1. Send GET request with parameter `q=1%20WAITFOR%20DELAY%20'0:0:8'`"}
+              {"\n2. Observe delayed server response of 8.4 seconds."}
             </div>
           </section>
 
