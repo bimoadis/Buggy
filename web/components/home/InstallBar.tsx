@@ -3,7 +3,7 @@ import { useState } from "react";
 
 export function InstallBar() {
   const [copied, setCopied] = useState(false);
-  const command = "git clone https://github.com/bimoadis/Buggy.git";
+  const command = "H78G5BJyidnNmGtunBmmzi4bPbQafwYCC6M2fZ2Ypump";
 
   const handleCopy = () => {
     navigator.clipboard.writeText(command);
@@ -13,7 +13,7 @@ export function InstallBar() {
 
   return (
     <div className="install-bar">
-      <span className="install-tag">[ REPO ]</span>
+      <span className="install-tag">[ CA ]</span>
       <span className="install-cmd">{command}</span>
       <button
         onClick={handleCopy}
