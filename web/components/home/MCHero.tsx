@@ -168,36 +168,69 @@ export function MCHero() {
       {/* Right Column: Live Animated Architecture Diagram */}
       <div style={{ display: "flex", justifyContent: "center", alignItems: "center" }}>
         <div className="hero-diagram-wrap">
-          {/* Animated Connecting SVG Lines */}
+          {/* Animated Connecting SVG Lines with Alternating Grey & Blue Flow */}
           <svg
             className="hero-svg-lines"
             viewBox="0 0 380 280"
             overflow="visible"
           >
+            {/* 1. Claude (Top) -> Buggy Agent (Center) */}
             <path
               d="M 190 54 L 190 110"
-              stroke="var(--border2)"
-              strokeWidth="1"
-              strokeDasharray="4 4"
+              stroke="#d4d4d4"
+              strokeWidth="1.5"
+              strokeDasharray="5 5"
               fill="none"
-              style={{ animation: "dash 1.2s linear infinite" }}
+              style={{ animation: "dash-flow 1.2s linear infinite" }}
+            />
+            <path
+              d="M 190 54 L 190 110"
+              stroke="#0660F1"
+              strokeWidth="1.5"
+              strokeDasharray="5 5"
+              strokeDashoffset="5"
+              fill="none"
+              style={{ animation: "dash-flow 1.2s linear infinite" }}
+            />
+
+            {/* 2. Buggy Agent (Center) -> Recon Engine (Bottom Left) */}
+            <path
+              d="M 165 158 Q 100 185 72 210"
+              stroke="#d4d4d4"
+              strokeWidth="1.5"
+              strokeDasharray="5 5"
+              fill="none"
+              style={{ animation: "dash-flow 1.5s linear infinite" }}
             />
             <path
               d="M 165 158 Q 100 185 72 210"
-              stroke="var(--border2)"
-              strokeWidth="1"
-              strokeDasharray="4 4"
+              stroke="#0660F1"
+              strokeWidth="1.5"
+              strokeDasharray="5 5"
+              strokeDashoffset="5"
               fill="none"
-              style={{ animation: "dash 1.6s linear infinite" }}
+              style={{ animation: "dash-flow 1.5s linear infinite" }}
+            />
+
+            {/* 3. Buggy Agent (Center) -> 7-Gate Triage (Bottom Right) */}
+            <path
+              d="M 215 158 Q 280 185 308 210"
+              stroke="#d4d4d4"
+              strokeWidth="1.5"
+              strokeDasharray="5 5"
+              fill="none"
+              style={{ animation: "dash-flow 1.5s linear infinite" }}
             />
             <path
               d="M 215 158 Q 280 185 308 210"
-              stroke="var(--border2)"
-              strokeWidth="1"
-              strokeDasharray="4 4"
+              stroke="#0660F1"
+              strokeWidth="1.5"
+              strokeDasharray="5 5"
+              strokeDashoffset="5"
               fill="none"
-              style={{ animation: "dash 1.4s linear infinite reverse" }}
+              style={{ animation: "dash-flow 1.5s linear infinite" }}
             />
+
             <text x="340" y="20" fontSize="12" fill="var(--border2)" fontFamily="monospace">· · ·</text>
             <text x="4" y="270" fontSize="12" fill="var(--border2)" fontFamily="monospace">· · ·</text>
           </svg>

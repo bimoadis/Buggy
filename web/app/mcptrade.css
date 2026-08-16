@@ -127,6 +127,15 @@ a {
   }
 }
 
+@keyframes dash-flow {
+  from {
+    stroke-dashoffset: 0;
+  }
+  to {
+    stroke-dashoffset: -20;
+  }
+}
+
 @keyframes scroll-left {
   from {
     transform: translateX(0);
