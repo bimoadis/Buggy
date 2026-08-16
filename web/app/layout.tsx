@@ -2,8 +2,8 @@ import type { Metadata } from "next";
 import { Inter, Instrument_Serif } from "next/font/google";
 import { GeistMono } from "geist/font/mono";
 import { SmoothScroll } from "@/components/SmoothScroll";
-import { PageTransition } from "@/components/PageTransition";
 import "./globals.css";
+import "./mcptrade.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-sans" });
 
@@ -44,7 +44,7 @@ export default function RootLayout({
     <html lang="en">
       <body className={`${inter.variable} ${GeistMono.variable} ${instrumentSerif.variable} antialiased`}>
         <SmoothScroll />
-        <PageTransition>{children}</PageTransition>
+        {children}
       </body>
     </html>
   );
