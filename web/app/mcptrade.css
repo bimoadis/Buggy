@@ -121,6 +121,18 @@ a {
   }
 }
 
+@keyframes float-centered {
+
+  0%,
+  100% {
+    transform: translateX(-50%) translateY(0);
+  }
+
+  50% {
+    transform: translateX(-50%) translateY(-4px);
+  }
+}
+
 @keyframes dash {
   to {
     stroke-dashoffset: -16;
@@ -562,7 +574,7 @@ h1.hero-title .hl {
   align-items: center;
   gap: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
-  animation: float 3s ease-in-out infinite;
+  animation: float-centered 3s ease-in-out infinite;
   white-space: nowrap;
 }
 
@@ -578,7 +590,7 @@ h1.hero-title .hl {
   align-items: center;
   gap: 10px;
   box-shadow: 0 4px 16px rgba(0, 0, 0, 0.18);
-  animation: float 3.5s ease-in-out infinite 0.4s;
+  animation: float-centered 3.5s ease-in-out infinite 0.4s;
   white-space: nowrap;
 }
 
