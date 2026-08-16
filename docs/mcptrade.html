@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude MCPTrade — Crypto Market Intelligence via MCP</title>
+<style>
+  :root{
+    --bg:#fafaf8;
+    --white:#fff;
+    --border:#e5e5e5;
+    --border2:#d4d4d4;
+    --text:#0a0a0a;
+    --text2:#525252;
+    --text3:#a1a1aa;
+    --orange:#ff6b00;
+    --orange-bg:#fff4ee;
+    --orange-border:#ffd4b8;
+    --green:#16a34a;
+    --green-bg:#f0fdf4;
+    --red:#dc2626;
+    --red-bg:#fef2f2;
+    --purple:#7c3aed;
+    --purple-bg:#f5f3ff;
+    --term-bg:#0d0d0d;
+    --term-green:#22c55e;
+    --term-orange:#fb923c;
+    --term-blue:#60a5fa;
+    --term-muted:#525252;
+    --term-white:#f5f5f5;
+    --radius:8px;
+    --radius-sm:5px;
+    --mono:"Geist Mono","SFMono-Regular",Menlo,Consolas,monospace;
+    --sans:"Geist","Inter",-apple-system,"Segoe UI",sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  html{-webkit-text-size-adjust:100%;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    font-size:14px;
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  a{color:inherit;text-decoration:none;}
+  ::selection{background:var(--orange);color:#fff;}
+
+  /* Marquee ticker top */
+  .promo-bar{
+    background:var(--text);
+    color:#fff;
+    font-family:var(--mono);
+    font-size:11px;
+    padding:7px 24px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    gap:16px;
+    letter-spacing:0.05em;
+    position:relative;
+    z-index:300;
+    flex-wrap:wrap;
+  }
+  .promo-bar .star{color:var(--orange);}
+  .promo-live{
+    background:var(--orange);
+    color:#fff;
+    padding:1px 7px;
+    border-radius:3px;
+    font-weight:700;
+    letter-spacing:0.08em;
+  }
+  .promo-link{
+    text-decoration:underline;
+    text-underline-offset:2px;
+    cursor:pointer;
+  }
+
+  /* Header nav */
+  header{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px 28px;
+    border-bottom:1px solid var(--border);
+    background:var(--white);
+    position:sticky;
+    top:0;
+    z-index:200;
+  }
+  .brand{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-weight:700;
+    font-size:16px;
+  }
+  .brand .logo{
+    width:26px;height:26px;
+    background:var(--text);
+    color:#fff;
+    border-radius:5px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:13px;
+  }
+  .brand .accent{color:var(--orange);}
+  nav.mainnav{
+    display:flex;
+    gap:28px;
+    font-size:13px;
+    color:var(--text2);
+  }
+  nav.mainnav a{
+    padding:4px 0;
+    border-bottom:2px solid transparent;
+  }
+  nav.mainnav a.active{
+    color:var(--text);
+    border-bottom-color:var(--orange);
+    font-weight:600;
+  }
+  .header-right{
+    display:flex;
+    align-items:center;
+    gap:16px;
+    font-size:12px;
+    color:var(--text2);
+  }
+  .status-dot{
+    width:7px;height:7px;
+    border-radius:50%;
+    background:var(--green);
+    display:inline-block;
+    margin-right:6px;
+    box-shadow:0 0 0 3px var(--green-bg);
+  }
+  .icon-btn{
+    width:30px;height:30px;
+    border:1px solid var(--border);
+    border-radius:6px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:14px;
+    color:var(--text2);
+  }
+
+  /* Live MCP terminal ticker */
+  .mcp-ticker{
+    background:var(--term-bg);
+    color:var(--term-white);
+    font-family:var(--mono);
+    font-size:12px;
+    padding:9px 0;
+    overflow:hidden;
+    white-space:nowrap;
+    position:relative;
+    border-bottom:1px solid #000;
+  }
+  .mcp-ticker .tag{
+    color:var(--term-orange);
+    font-weight:700;
+    padding:0 20px;
+  }
+  .mcp-ticker .track{
+    display:inline-flex;
+    gap:56px;
+    padding-left:20px;
+    animation:scroll-left 34s linear infinite;
+  }
+  .mcp-ticker .fn{color:var(--term-blue);}
+  .mcp-ticker .arrow{color:var(--term-muted);}
+  .mcp-ticker .result{color:var(--term-green);}
+  @keyframes scroll-left{
+    from{transform:translateX(0);}
+    to{transform:translateX(-50%);}
+  }
+  @media (prefers-reduced-motion: reduce){
+    .mcp-ticker .track{animation:none;}
+  }
+
+  /* Hero */
+  .hero{
+    max-width:1180px;
+    margin:0 auto;
+    padding:64px 28px 48px;
+    position:relative;
+  }
+  .badge-new{
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    background:var(--orange-bg);
+    border:1px solid var(--orange-border);
+    color:var(--orange);
+    font-family:var(--mono);
+    font-size:11px;
+    padding:5px 12px;
+    border-radius:20px;
+    letter-spacing:0.04em;
+    margin-bottom:22px;
+    font-weight:600;
+  }
+  h1.hero-title{
+    font-size:56px;
+    line-height:1.04;
+    letter-spacing:-0.02em;
+    font-weight:800;
+    max-width:760px;
+  }
+  h1.hero-title .hl{
+    background:var(--text);
+    color:#fff;
+    padding:2px 10px;
+    display:inline-block;
+  }
+  .hero-sub{
+    margin-top:20px;
+    font-size:16px;
+    color:var(--text2);
+    max-width:480px;
+    line-height:1.6;
+  }
+  .hero-ctas{
+    display:flex;
+    gap:12px;
+    margin-top:28px;
+  }
+  .btn{
+    font-family:var(--mono);
+    font-size:12.5px;
+    padding:12px 22px;
+    border-radius:6px;
+    letter-spacing:0.02em;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    gap:8px;
+    border:1px solid var(--text);
+  }
+  .btn-primary{background:var(--text);color:#fff;}
+  .btn-secondary{background:var(--white);color:var(--text);}
+
+  /* hero diagram */
+  .hero-diagram{
+    position:absolute;
+    top:60px;
+    right:28px;
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--text2);
+    display:none;
+  }
+  @media(min-width:1020px){ .hero-diagram{display:block;} }
+  .node{
+    border:1px solid var(--border2);
+    border-radius:6px;
+    padding:10px 16px;
+    background:var(--white);
+    display:flex;
+    align-items:center;
+    gap:8px;
+  }
+  .node.claude{border-color:var(--text);}
+  .node.server{background:var(--text);color:#fff;border-color:var(--text);}
+  .node.server .status-dot{background:var(--term-green);}
+  .node-title{font-weight:700;font-size:12px;}
+  .node-sub{color:var(--text3);font-size:10px;}
+  .node.server .node-sub{color:#a1a1aa;}
+  .diagram-row{display:flex;gap:14px;margin-top:14px;}
+
+  /* CA bar */
+  .ca-bar{
+    border-top:1px solid var(--border);
+    border-bottom:1px solid var(--border);
+    padding:14px 28px;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    font-family:var(--mono);
+    font-size:12px;
+    color:var(--text2);
+    background:var(--white);
+  }
+  .ca-bar .ca-label{color:var(--text3);margin-right:10px;}
+  .ca-bar .ca-value{color:var(--text);}
+  .ca-bar .ca-right{display:flex;align-items:center;gap:16px;}
+  .live-pill{color:var(--green);font-weight:700;}
+  .live-pill::before{content:"● ";}
+
+  /* Stat cards row */
+  .stats-row{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr;
+    border-bottom:1px solid var(--border);
+  }
+  .stat-card{
+    padding:32px 28px;
+    border-right:1px solid var(--border);
+  }
+  .stat-card:last-child{border-right:none;}
+  .stat-bar{width:44px;height:5px;border-radius:3px;margin-bottom:20px;}
+  .bar-green{background:var(--green);}
+  .bar-red{background:var(--red);}
+  .bar-orange{background:var(--orange);}
+  .stat-label{
+    font-size:13px;
+    color:var(--text2);
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    margin-bottom:10px;
+  }
+  .stat-tag{
+    display:inline-flex;
+    align-items:center;
+    gap:5px;
+    font-family:var(--mono);
+    font-size:10px;
+    color:var(--text3);
+    border:1px solid var(--border);
+    padding:2px 8px;
+    border-radius:12px;
+  }
+  .stat-tag .dot{width:5px;height:5px;border-radius:50%;background:var(--green);}
+
+  .stat-mid{padding:32px 28px;border-right:1px solid var(--border);}
+  .skills-tags{
+    display:flex;flex-wrap:wrap;gap:8px;margin-top:14px;
+  }
+  .skills-tags span{
+    font-family:var(--mono);
+    font-size:10.5px;
+    border:1px solid var(--border);
+    padding:5px 10px;
+    border-radius:5px;
+    color:var(--text2);
+  }
+  .verified{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    height:100%;text-align:center;padding:32px 28px;
+  }
+  .verified .diamond{
+    width:56px;height:56px;
+    border:2px solid var(--orange);
+    transform:rotate(45deg);
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:16px;
+  }
+  .verified .diamond span{transform:rotate(-45deg);font-size:20px;color:var(--orange);}
+  .verified strong{font-size:13px;letter-spacing:0.03em;}
+  .verified .sub{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:6px;}
+
+  .progress-row{margin-top:16px;}
+  .progress-label{
+    display:flex;justify-content:space-between;
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--text2);
+    margin-bottom:6px;
+  }
+  .progress-track{
+    height:6px;background:var(--border);border-radius:3px;overflow:hidden;
+    margin-bottom:16px;
+  }
+  .progress-fill{height:100%;border-radius:3px;}
+  .fill-green{background:var(--green);width:0%;}
+  .fill-red{background:var(--red);width:0%;}
+  .ssr-note{font-family:var(--mono);font-size:10px;color:var(--text3);margin-top:6px;}
+
+  /* Section wrapper */
+  .section{
+    max-width:1180px;
+    margin:0 auto;
+    padding:72px 28px;
+    border-bottom:1px solid var(--border);
+  }
+  .eyebrow{
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--orange);
+    letter-spacing:0.08em;
+    margin-bottom:14px;
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+  }
+  .eyebrow .explore{color:var(--text3);font-weight:400;}
+  h2.section-title{
+    font-size:34px;
+    font-weight:800;
+    letter-spacing:-0.01em;
+    line-height:1.15;
+    max-width:640px;
+  }
+  .section-desc{
+    margin-top:14px;
+    color:var(--text2);
+    font-size:15px;
+    max-width:600px;
+    line-height:1.6;
+  }
+
+  /* Feature grid */
+  .feature-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:0;
+    margin-top:48px;
+    border-top:1px solid var(--border);
+    border-left:1px solid var(--border);
+  }
+  .feature-card{
+    padding:28px;
+    border-right:1px solid var(--border);
+    border-bottom:1px solid var(--border);
+  }
+  .feature-icon{
+    width:32px;height:32px;
+    border:1px solid var(--border2);
+    border-radius:6px;
+    display:flex;align-items:center;justify-content:center;
+    margin-bottom:20px;
+    font-size:14px;
+  }
+  .feature-card h3{font-size:16px;margin-bottom:8px;}
+  .feature-card p{color:var(--text2);font-size:13.5px;line-height:1.6;margin-bottom:18px;}
+  .btn-small{
+    font-family:var(--mono);
+    font-size:11px;
+    padding:8px 14px;
+    border-radius:5px;
+    display:inline-block;
+  }
+  .btn-small.dark{background:var(--text);color:#fff;}
+  .btn-small.light{background:#fff;border:1px solid var(--text);color:var(--text);}
+
+  /* precision tools + docs split */
+  .split{
+    display:grid;
+    grid-template-columns:1fr 1.3fr;
+    gap:0;
+  }
+  .split-left{padding:72px 28px;border-right:1px solid var(--border);}
+  .split-right{padding:72px 28px;}
+  .dagger{font-size:26px;margin-bottom:24px;color:var(--text);}
+  .split .eyebrow{color:var(--text3);}
+  .split h2{font-size:30px;font-weight:800;line-height:1.15;margin-bottom:16px;}
+  .split p{color:var(--text2);font-size:14.5px;line-height:1.6;max-width:420px;margin-bottom:26px;}
+  .split-ctas{display:flex;gap:10px;}
+
+  .doc-list{margin-top:8px;}
+  .doc-item{
+    display:flex;gap:16px;
+    padding:18px 0;
+    border-bottom:1px solid var(--border);
+  }
+  .doc-item:first-child{padding-top:0;}
+  .doc-icon{
+    width:34px;height:34px;flex-shrink:0;
+    border:1px solid var(--border2);
+    border-radius:6px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:14px;
+  }
+  .doc-item h4{font-size:14.5px;margin-bottom:4px;}
+  .doc-item p{color:var(--text2);font-size:12.5px;line-height:1.5;}
+  .open-docs{
+    margin-top:20px;
+    font-family:var(--mono);
+    font-size:12px;
+    font-weight:700;
+    display:inline-flex;
+    align-items:center;
+    gap:6px;
+  }
+
+  /* Market table */
+  .market-section{max-width:1180px;margin:0 auto;padding:64px 28px 90px;}
+  .market-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-end;
+    flex-wrap:wrap;
+    gap:16px;
+    margin-bottom:20px;
+  }
+  .market-head .eyebrow{margin-bottom:6px;}
+  .market-sub{font-family:var(--mono);font-size:11.5px;color:var(--text2);letter-spacing:0.03em;}
+  .filter-tabs{display:flex;gap:6px;}
+  .filter-tabs button{
+    font-family:var(--mono);
+    font-size:11.5px;
+    padding:6px 14px;
+    border-radius:5px;
+    border:1px solid var(--border);
+    background:#fff;
+    color:var(--text2);
+    cursor:pointer;
+  }
+  .filter-tabs button.active{background:var(--text);color:#fff;border-color:var(--text);}
+
+  .market-toolbar{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    border:1px solid var(--border);
+    border-radius:8px 8px 0 0;
+    padding:10px 16px;
+    background:#fff;
+    gap:16px;
+    flex-wrap:wrap;
+  }
+  .search-box{
+    flex:1;min-width:200px;
+    display:flex;align-items:center;gap:8px;
+    font-size:13px;color:var(--text3);
+  }
+  .search-box input{
+    border:none;outline:none;background:transparent;
+    font-size:13px;width:100%;color:var(--text);
+    font-family:var(--sans);
+  }
+
+  table.market-table{
+    width:100%;
+    border-collapse:collapse;
+    border:1px solid var(--border);
+    border-top:none;
+    background:#fff;
+  }
+  table.market-table thead th{
+    text-align:left;
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--text3);
+    text-transform:uppercase;
+    letter-spacing:0.05em;
+    padding:12px 16px;
+    border-bottom:1px solid var(--border);
+  }
+  .empty-row td{
+    padding:60px 16px;
+    text-align:center;
+    color:var(--text3);
+    font-size:13px;
+  }
+  .spinner{
+    display:inline-block;
+    width:14px;height:14px;
+    border:2px solid var(--border2);
+    border-top-color:var(--orange);
+    border-radius:50%;
+    animation:spin 0.8s linear infinite;
+    margin-right:8px;
+    vertical-align:middle;
+  }
+  @keyframes spin{to{transform:rotate(360deg);}}
+
+  footer{
+    border-top:1px solid var(--border);
+    padding:18px 28px;
+    font-family:var(--mono);
+    font-size:11px;
+    color:var(--text3);
+    display:flex;
+    justify-content:space-between;
+    flex-wrap:wrap;
+    gap:8px;
+  }
+
+  @media(max-width:900px){
+    h1.hero-title{font-size:36px;}
+    .stats-row{grid-template-columns:1fr;}
+    .stat-card,.stat-mid{border-right:none;border-bottom:1px solid var(--border);}
+    .feature-grid{grid-template-columns:1fr;}
+    .split{grid-template-columns:1fr;}
+    .split-left{border-right:none;border-bottom:1px solid var(--border);}
+    nav.mainnav{display:none;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="promo-bar">
+    <span class="star">★</span><span class="star">★</span><span class="star">★</span>
+    <span class="promo-live">LIVE</span>
+    <span>100 COINS ANALYZED BY CLAUDE MCP</span>
+    <span class="promo-link">VIEW SKILLS →</span>
+    <span class="star">★</span><span class="star">★</span><span class="star">★</span>
+  </div>
+
+  <header>
+    <div class="brand">
+      <div class="logo">◧</div>
+      Claude <span class="accent">MCPTrade</span>
+    </div>
+    <nav class="mainnav">
+      <a href="mcptrade.html" class="active">Dashboard</a>
+      <a href="skills.html">Claude Skills</a>
+      <a href="docs.html">Docs</a>
+    </nav>
+    <div class="header-right">
+      <a href="#" class="icon-btn">𝕏</a>
+      <a href="#" class="icon-btn">⌥</a>
+      <span><span class="status-dot"></span>MCP Connected</span>
+    </div>
+  </header>
+
+  <div class="mcp-ticker">
+    <div class="track" id="tickerTrack"></div>
+  </div>
+
+  <section class="hero">
+    <div class="badge-new">★ NEW &nbsp; CLAUDE MCP AGENT · DAILY ANALYSIS</div>
+    <h1 class="hero-title">CRYPTO MARKET<br><span class="hl">INTELLIGENCE VIA MCP</span></h1>
+    <p class="hero-sub">100 crypto charts on TradingView. Analyzed daily by Claude MCP with signals, S&amp;R levels, and trade context, automatically.</p>
+    <div class="hero-ctas">
+      <a class="btn btn-primary">START ANALYZING →</a>
+      <a class="btn btn-secondary">VIEW 58 SKILLS</a>
+    </div>
+
+    <div class="hero-diagram">
+      <div class="node claude">
+        <span>🅰</span>
+        <div><div class="node-title">CLAUDE</div><div class="node-sub">Sonnet 4.5</div></div>
+      </div>
+      <div style="height:14px;"></div>
+      <div class="node server">
+        <span>★</span>
+        <div><div class="node-title">MCP SERVER</div><div class="node-sub"><span class="status-dot"></span>Protocol · Active</div></div>
+      </div>
+      <div class="diagram-row">
+        <div class="node"><div><div class="node-title">TRADINGVIEW</div><div class="node-sub">Chart · MCP</div></div></div>
+        <div class="node"><div><div class="node-title">SUPABASE</div><div class="node-sub">Postgres · DB</div></div></div>
+      </div>
+    </div>
+  </section>
+
+  <div class="ca-bar">
+    <div><span class="ca-label">[ CA ]</span><span class="ca-value">9gfotkMNQQqPmsvHQkta2hoUTcEdMgcCvKn7n3Cepump</span></div>
+    <div class="ca-right"><span>COPY</span><span class="live-pill">LIVE</span></div>
+  </div>
+
+  <div class="stats-row">
+    <div class="stat-card">
+      <div class="stat-bar bar-green"></div>
+      <div class="stat-label">BUY SIGNALS</div>
+      <div class="stat-tag"><span class="dot"></span>CLAUDE MCP</div>
+      <div class="progress-row">
+        <div class="progress-label"><span>BUY</span><span>0/100</span></div>
+        <div class="progress-track"><div class="progress-fill fill-green"></div></div>
+      </div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-bar bar-red"></div>
+      <div class="stat-label">SELL SIGNALS</div>
+      <div class="stat-tag"><span class="dot" style="background:var(--red);"></span>CLAUDE MCP</div>
+      <div class="progress-row">
+        <div class="progress-label"><span>SELL</span><span>0/100</span></div>
+        <div class="progress-track"><div class="progress-fill fill-red"></div></div>
+      </div>
+      <div class="ssr-note">[ ● SSR · NO COLD STARTS ]</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-bar bar-orange"></div>
+      <div class="stat-label">NEUTRAL</div>
+      <div class="stat-tag"><span class="dot" style="background:var(--orange);"></span>CLAUDE MCP</div>
+    </div>
+  </div>
+
+  <div class="stats-row" style="grid-template-columns:1.6fr 1fr;">
+    <div class="stat-mid">
+      <div class="stat-label" style="margin-bottom:2px;">[ 58 SKILLS. ONE AGENT. ]</div>
+      <div class="skills-tags">
+        <span>MCP INTEGRATION</span>
+        <span>CHART ANALYSIS</span>
+        <span>MARKET SCANNER</span>
+        <span>INDICATORS</span>
+        <span>AI NARRATIVE</span>
+        <span>DATA PIPELINE</span>
+      </div>
+      <div class="ssr-note" style="margin-top:16px;">[ ● SKILLS FOR AGENTS ]</div>
+    </div>
+    <div class="verified">
+      <div class="diamond"><span>✓</span></div>
+      <strong>ANALYSIS VERIFIED</strong>
+      <div class="sub">[ ● DAILY ]</div>
+    </div>
+  </div>
+
+  <section class="section" id="skills">
+    <div class="eyebrow">[ CLAUDE MCP SKILLS ] <span class="explore">&gt; EXPLORE (⇅)</span></div>
+    <h2 class="section-title">BUILT FOR TRADING INTELLIGENCE</h2>
+    <p class="section-desc">58 ready-to-use skills for Claude Code + MCP integration with TradingView. Copy and run directly in your Claude Code terminal.</p>
+
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">○</div>
+        <h3>MCP Integration</h3>
+        <p>Connect Claude directly to TradingView via MCP. Control charts, draw levels, set alerts programmatically.</p>
+        <a class="btn-small dark">LEARN MORE (10)</a>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">◈</div>
+        <h3>Chart Analysis</h3>
+        <p>Detect S&amp;R, identify trends, Fibonacci levels, divergence, and candlestick patterns from OHLCV data.</p>
+        <a class="btn-small dark">LEARN MORE (10)</a>
+      </div>
+      <div class="feature-card" style="border-right:none;">
+        <div class="feature-icon">◎</div>
+        <h3>Market Scanner</h3>
+        <p>Scan 100 coins for buy signals, golden crosses, oversold zones, and volume breakouts automatically.</p>
+        <a class="btn-small dark">LEARN MORE (8)</a>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">◆</div>
+        <h3>Indicators</h3>
+        <p>RSI, MACD, ADX, Bollinger Bands — calculated from raw price data. No external library required.</p>
+        <a class="btn-small dark">LEARN MORE (8)</a>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">◇</div>
+        <h3>Pine Script</h3>
+        <p>Custom TradingView indicators in Pine Script, ready to copy into TradingView Pine Editor.</p>
+        <a class="btn-small dark">LEARN MORE (7)</a>
+      </div>
+      <div class="feature-card" style="border-right:none;">
+        <div class="feature-icon">★</div>
+        <h3>AI Narrative</h3>
+        <p>Claude generates human-readable market narratives from indicator values and trading signals.</p>
+        <a class="btn-small dark">LEARN MORE (8)</a>
+      </div>
+    </div>
+  </section>
+
+  <div class="split" id="docs">
+    <div class="split-left">
+      <div class="dagger">🗡</div>
+      <div class="eyebrow">[ PRECISION TOOLS ]</div>
+      <h2>58 SKILLS.<br><span style="background:var(--text);color:#fff;padding:2px 8px;">ONE AGENT.</span></h2>
+      <p>Production-ready Python functions for MCP integration, chart analysis, market scanning, and AI-powered narrative generation. Copy and run directly in Claude Code.</p>
+      <div class="split-ctas">
+        <a class="btn btn-primary">VIEW SKILLS →</a>
+        <a class="btn btn-secondary">READ DOCS</a>
+      </div>
+    </div>
+    <div class="split-right">
+      <div class="eyebrow">[ DOCUMENTATION ]</div>
+      <div class="doc-list">
+        <div class="doc-item">
+          <div class="doc-icon">📄</div>
+          <div><h4>Architecture Overview</h4><p>Full system diagram — generation layer, MCP protocol, ISR caching, and Supabase schema.</p></div>
+        </div>
+        <div class="doc-item">
+          <div class="doc-icon">&lt;/&gt;</div>
+          <div><h4>MCP Protocol Reference</h4><p>All 9 MCP tool definitions, connection patterns, and error handling strategies.</p></div>
+        </div>
+        <div class="doc-item">
+          <div class="doc-icon">🗄</div>
+          <div><h4>Database Schema</h4><p>Complete coin_analysis table definition with column types, constraints, and SQL CREATE statement.</p></div>
+        </div>
+        <div class="doc-item">
+          <div class="doc-icon">▷</div>
+          <div><h4>Quick Start</h4><p>Four-step setup from clone to running dev server, including Python script execution.</p></div>
+        </div>
+        <div class="doc-item">
+          <div class="doc-icon">🔗</div>
+          <div><h4>Environment Variables</h4><p>All four required env vars with scope (client vs server), purpose, and .env.local template.</p></div>
+        </div>
+      </div>
+      <a class="open-docs">OPEN FULL DOCS →</a>
+    </div>
+  </div>
+
+  <section class="market-section">
+    <div class="market-head">
+      <div>
+        <div class="eyebrow">[ MARKET ANALYSIS ] <span class="explore">&gt; FILTER (⇅)</span></div>
+        <div class="market-sub">100 COINS · CLAUDE MCP · DAILY SIGNALS</div>
+      </div>
+      <div class="filter-tabs">
+        <button class="active">All</button>
+        <button>Buy</button>
+        <button>Neutral</button>
+        <button>Sell</button>
+      </div>
+    </div>
+
+    <div class="market-toolbar">
+      <div class="search-box">🔍 <input type="text" placeholder="Search coin name or symbol..."></div>
+    </div>
+    <table class="market-table">
+      <thead>
+        <tr>
+          <th>#</th><th>COIN</th><th style="text-align:right;">PRICE</th><th style="text-align:right;">24H</th><th style="text-align:right;">SIGNAL</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr class="empty-row"><td colspan="5"><span class="spinner"></span>Waiting for data — run generate_analysis.py first</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <footer>
+    <span>data: coingecko · analysis: claude mcp · chart: tradingview · revalidates every 1h</span>
+    <span>—</span>
+  </footer>
+
+<script>
+  // Build repeating MCP ticker content
+  const events = [
+    { tag:'MCP', text:'connect("tradingview") → [connected] daily TF' },
+    { tag:'', fn:'mcp.draw_levels', text:'(resistance=98000) → [drawn] on chart' },
+    { tag:'', fn:'claude.scan_watchlist', text:'(coins=100) → [42] buy signals found' },
+    { tag:'', fn:'claude.detect_sr', text:'("SOLUSDT") → [S: $165] [R: $185]' },
+    { tag:'', fn:'claude.analyze', text:'("ETHUSDT") → [signal: strong buy]' },
+  ];
+  const track = document.getElementById('tickerTrack');
+  function buildTicker(){
+    let html = '';
+    for(let r=0;r<2;r++){
+      events.forEach(e=>{
+        html += '<span>';
+        if(e.fn){ html += '<span class="fn">'+e.fn+'</span>'; }
+        html += '<span> '+e.text+'</span>';
+        html += '</span>';
+      });
+    }
+    track.innerHTML = html;
+  }
+  buildTicker();
+</script>
+</body>
+</html>

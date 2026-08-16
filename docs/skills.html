@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Claude Skills — Claude MCPTrade</title>
+<style>
+  :root{
+    --bg:#fafaf8;
+    --white:#fff;
+    --border:#e5e5e5;
+    --border2:#d4d4d4;
+    --text:#0a0a0a;
+    --text2:#525252;
+    --text3:#a1a1aa;
+    --orange:#ff6b00;
+    --orange-bg:#fff4ee;
+    --orange-border:#ffd4b8;
+    --green:#16a34a;
+    --red:#dc2626;
+    --purple:#7c3aed;
+    --blue:#2563eb;
+    --teal:#0d9488;
+    --cyan:#0891b2;
+    --pink:#db2777;
+    --term-bg:#0d0d0d;
+    --term-green:#22c55e;
+    --term-orange:#fb923c;
+    --term-blue:#60a5fa;
+    --term-purple:#c084fc;
+    --term-muted:#525252;
+    --term-white:#f5f5f5;
+    --radius:8px;
+    --mono:"Geist Mono","SFMono-Regular",Menlo,Consolas,monospace;
+    --sans:"Geist","Inter",-apple-system,"Segoe UI",sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.5;-webkit-font-smoothing:antialiased;}
+  a{color:inherit;text-decoration:none;}
+
+  .promo-bar{background:var(--text);color:#fff;font-family:var(--mono);font-size:11px;padding:7px 24px;display:flex;align-items:center;justify-content:center;gap:16px;letter-spacing:0.05em;position:relative;z-index:300;flex-wrap:wrap;}
+  .promo-bar .star{color:var(--orange);}
+  .promo-live{background:var(--orange);color:#fff;padding:1px 7px;border-radius:3px;font-weight:700;letter-spacing:0.08em;}
+
+  header{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;border-bottom:1px solid var(--border);background:var(--white);position:sticky;top:0;z-index:200;}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;}
+  .brand .logo{width:26px;height:26px;background:var(--text);color:#fff;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:13px;}
+  .brand .accent{color:var(--orange);}
+  nav.mainnav{display:flex;gap:28px;font-size:13px;color:var(--text2);}
+  nav.mainnav a{padding:4px 0;border-bottom:2px solid transparent;}
+  nav.mainnav a.active{color:var(--text);border-bottom-color:var(--orange);font-weight:600;}
+  .header-right{display:flex;align-items:center;gap:16px;font-size:12px;color:var(--text2);}
+  .status-dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;margin-right:6px;box-shadow:0 0 0 3px #f0fdf4;}
+  .icon-btn{width:30px;height:30px;border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--text2);}
+
+  .mcp-ticker{background:var(--term-bg);color:var(--term-white);font-family:var(--mono);font-size:12px;padding:9px 0;overflow:hidden;white-space:nowrap;border-bottom:1px solid #000;}
+  .mcp-ticker .track{display:inline-flex;gap:56px;padding-left:20px;animation:scroll-left 34s linear infinite;}
+  .mcp-ticker .fn{color:var(--term-blue);}
+  @keyframes scroll-left{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+  @media (prefers-reduced-motion: reduce){.mcp-ticker .track{animation:none;}}
+
+  .skills-hero{max-width:1280px;margin:0 auto;padding:56px 28px 30px;}
+  .eyebrow{font-family:var(--mono);font-size:11px;color:var(--orange);letter-spacing:0.08em;margin-bottom:14px;display:flex;justify-content:space-between;align-items:center;}
+  .eyebrow .explore{color:var(--text3);font-weight:400;}
+  h1.page-title{font-size:42px;font-weight:800;letter-spacing:-0.01em;line-height:1.1;max-width:640px;}
+  .page-desc{margin-top:16px;color:var(--text2);font-size:15.5px;max-width:600px;line-height:1.6;}
+
+  .meta-row{display:flex;gap:28px;margin-top:26px;font-size:14px;flex-wrap:wrap;}
+  .meta-row b{font-weight:700;}
+  .meta-row span.dim{color:var(--text3);}
+
+  .filter-tabs{display:flex;gap:8px;margin-top:32px;flex-wrap:wrap;}
+  .filter-tabs button{font-family:var(--mono);font-size:12.5px;padding:9px 16px;border-radius:6px;border:1px solid var(--border);background:#fff;color:var(--text2);cursor:pointer;}
+  .filter-tabs button.active{background:var(--text);color:#fff;border-color:var(--text);}
+  .filter-tabs button:hover:not(.active){border-color:var(--border2);}
+
+  .search-wrap{margin-top:16px;position:relative;max-width:1280px;}
+  .search-wrap input{width:100%;padding:12px 16px 12px 40px;border:1px solid var(--border);border-radius:8px;font-size:13.5px;font-family:var(--sans);outline:none;background:#fff;}
+  .search-wrap input:focus{border-color:var(--orange);}
+  .search-wrap .icon{position:absolute;left:14px;top:50%;transform:translateY(-50%);color:var(--text3);}
+
+  .skills-grid{max-width:1280px;margin:0 auto;padding:28px 28px 90px;display:grid;grid-template-columns:repeat(4,1fr);gap:16px;}
+  @media(max-width:1200px){.skills-grid{grid-template-columns:repeat(2,1fr);}}
+  @media(max-width:640px){.skills-grid{grid-template-columns:1fr;}}
+
+  .skill-card{border:1px solid var(--border);border-radius:10px;background:#fff;padding:18px;display:flex;flex-direction:column;}
+  .skill-card-head{display:flex;justify-content:space-between;align-items:flex-start;gap:8px;margin-bottom:8px;}
+  .skill-name{font-family:var(--mono);font-size:14px;font-weight:700;word-break:break-word;}
+  .badge{font-family:var(--mono);font-size:10px;font-weight:700;padding:3px 8px;border-radius:4px;white-space:nowrap;flex-shrink:0;}
+  .badge-mcp{background:var(--orange-bg);color:var(--orange);border:1px solid var(--orange-border);}
+  .badge-chart{background:#eff6ff;color:var(--blue);border:1px solid #bfdbfe;}
+  .badge-scanner{background:#f5f3ff;color:var(--purple);border:1px solid #ddd6fe;}
+  .badge-indicator{background:#f0fdf4;color:var(--green);border:1px solid #bbf7d0;}
+  .badge-pine{background:#f0fdfa;color:var(--teal);border:1px solid #99f6e4;}
+  .badge-data{background:#ecfeff;color:var(--cyan);border:1px solid #a5f3fc;}
+  .badge-ai{background:#fdf2f8;color:var(--pink);border:1px solid #fbcfe8;}
+
+  .skill-desc{color:var(--text2);font-size:12.5px;line-height:1.5;margin-bottom:12px;min-height:38px;}
+  .code-box{background:var(--term-bg);border-radius:6px;padding:12px 14px;font-family:var(--mono);font-size:11px;line-height:1.65;color:var(--term-white);overflow-x:auto;margin-bottom:12px;white-space:pre;}
+  .tok-kw{color:var(--term-blue);}
+  .tok-str{color:var(--term-green);}
+  .tok-num{color:var(--term-orange);}
+  .tok-fn{color:var(--term-purple);}
+
+  .skill-foot{display:flex;justify-content:space-between;align-items:center;margin-top:auto;}
+  .skill-tags{display:flex;gap:6px;}
+  .skill-tags span{font-family:var(--mono);font-size:10px;color:var(--text3);border:1px solid var(--border);padding:3px 8px;border-radius:4px;}
+  .skill-actions{display:flex;gap:6px;font-family:var(--mono);font-size:10.5px;}
+  .skill-actions a{padding:5px 9px;border-radius:4px;border:1px solid var(--border);color:var(--text2);}
+  .skill-actions a.copy{background:var(--text);color:#fff;border-color:var(--text);}
+
+  .no-results{grid-column:1/-1;text-align:center;padding:60px 20px;color:var(--text3);font-size:13.5px;display:none;}
+
+  footer{border-top:1px solid var(--border);padding:18px 28px;font-family:var(--mono);font-size:11px;color:var(--text3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;}
+
+  @media(max-width:900px){
+    h1.page-title{font-size:30px;}
+    nav.mainnav{display:none;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="promo-bar">
+    <span class="star">★</span><span class="star">★</span><span class="star">★</span>
+    <span class="promo-live">LIVE</span>
+    <span>100 COINS ANALYZED BY CLAUDE MCP</span>
+    <span>· VIEW SKILLS →</span>
+    <span class="star">★</span><span class="star">★</span><span class="star">★</span>
+  </div>
+
+  <header>
+    <div class="brand">
+      <div class="logo">◧</div>
+      Claude <span class="accent">MCPTrade</span>
+    </div>
+    <nav class="mainnav">
+      <a href="mcptrade.html">Dashboard</a>
+      <a href="skills.html" class="active">Claude Skills</a>
+      <a href="docs.html">Docs</a>
+    </nav>
+    <div class="header-right">
+      <a href="#" class="icon-btn">𝕏</a>
+      <a href="#" class="icon-btn">⌥</a>
+      <span><span class="status-dot"></span>MCP Connected</span>
+    </div>
+  </header>
+
+  <div class="mcp-ticker"><div class="track" id="tickerTrack"></div></div>
+
+  <section class="skills-hero">
+    <div class="eyebrow">[ CLAUDE MCP SKILLS ] <span class="explore">&gt; FILTER BY CATEGORY (⇅)</span></div>
+    <h1 class="page-title">BUILT FOR TRADING INTELLIGENCE</h1>
+    <p class="page-desc">58 ready-to-use skills for Claude Code + MCP integration with TradingView. Copy and run directly in your Claude Code terminal.</p>
+
+    <div class="meta-row">
+      <span><b id="totalCount">58</b> <span class="dim">total skills</span></span>
+      <span><b>7</b> <span class="dim">categories</span></span>
+      <span><b>Claude MCP</b> <span class="dim">powered</span></span>
+      <span><b>Python 3.10+</b></span>
+    </div>
+
+    <div class="filter-tabs" id="filterTabs"></div>
+
+    <div class="search-wrap">
+      <span class="icon">🔍</span>
+      <input type="text" id="searchInput" placeholder="Search skills, tags...">
+    </div>
+  </section>
+
+  <div class="skills-grid" id="skillsGrid"></div>
+  <div class="no-results" id="noResults">No skills match your search.</div>
+
+  <footer>
+    <span>data: coingecko · analysis: claude mcp · chart: tradingview · revalidates every 1h</span>
+    <span>58 skills · 7 categories</span>
+  </footer>
+
+<script>
+  // ---- Ticker ----
+  const events = [
+    { fn:'mcp.connect', text:'("tradingview") → [connected] daily TF' },
+    { fn:'mcp.draw_levels', text:'(resistance=98000) → [drawn] on chart' },
+    { fn:'claude.scan_watchlist', text:'(coins=100) → [42] buy signals found' },
+    { fn:'claude.detect_sr', text:'("SOLUSDT") → [S: $165] [R: $185]' },
+    { fn:'claude.analyze', text:'("ETHUSDT") → [signal: strong buy]' },
+  ];
+  const track = document.getElementById('tickerTrack');
+  let th='';
+  for(let r=0;r<2;r++){events.forEach(e=>{th+='<span><span class="fn">'+e.fn+'</span> '+e.text+'</span>';});}
+  track.innerHTML = th;
+
+  // ---- Syntax highlight ----
+  function esc(s){return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  const KEYWORDS = ['def','import','as','return','for','in','if','elif','else','class','from','raise','assert','or','and','not','None','True','False','while','with','try','except','lambda','yield'];
+  const kwRe = new RegExp('\\b('+KEYWORDS.join('|')+')\\b','g');
+  const numRe = /\b\d+(\.\d+)?\b/g;
+  function highlight(code){
+    const strRe = /(['"])(?:(?!\1).)*\1/g;
+    let parts=[], last=0, m;
+    while((m = strRe.exec(code))){
+      parts.push({t:'code', v: code.slice(last, m.index)});
+      parts.push({t:'str', v: m[0]});
+      last = strRe.lastIndex;
+    }
+    parts.push({t:'code', v: code.slice(last)});
+    return parts.map(p=>{
+      if(p.t==='str') return '<span class="tok-str">'+esc(p.v)+'</span>';
+      let s = esc(p.v);
+      s = s.replace(kwRe,'<span class="tok-kw">$1</span>');
+      s = s.replace(numRe,'<span class="tok-num">$&</span>');
+      return s;
+    }).join('');
+  }
+
+  // ---- Data ----
+  const CATS = [
+    {key:'all', label:'All', badge:null},
+    {key:'mcp', label:'MCP Integration', badge:'mcp'},
+    {key:'chart', label:'Chart Analysis', badge:'chart'},
+    {key:'scanner', label:'Market Scanner', badge:'scanner'},
+    {key:'indicator', label:'Indicators', badge:'indicator'},
+    {key:'pine', label:'Pine Script', badge:'pine'},
+    {key:'data', label:'Data Pipeline', badge:'data'},
+    {key:'ai', label:'Claude AI', badge:'ai'},
+  ];
+
+  const SKILLS = [
+    // MCP Integration (10)
+    {cat:'mcp', name:'mcp_connect_tradingview', desc:'Establish MCP connection between Claude and TradingView Desktop.', tags:['MCP','TradingView'],
+     code:`import anthropic_mcp as mcp
+
+def connect_tradingview(timeout=30):
+    client = mcp.MCPClient(server="tradingview-mcp")
+    conn = client.connect(timeout=timeout)
+    assert conn.status == "connected"
+    return client`},
+    {cat:'mcp', name:'mcp_draw_sr_levels', desc:'Draw support and resistance lines directly on TradingView chart via MCP.', tags:['MCP','Drawing'],
+     code:`def draw_sr_levels(client, support, resistance):
+    for lvl in support:
+        client.call("draw_line", {"price": lvl,
+            "color": "#22C55E", "style": "solid"})
+    for lvl in resistance:
+        client.call("draw_line", {"price": lvl,
+            "color": "#EF4444", "style": "dashed"})`},
+    {cat:'mcp', name:'mcp_read_chart_data', desc:'Read OHLCV data from active TradingView chart via MCP.', tags:['MCP','Data'],
+     code:`def read_chart_data(client, bars=365):
+    result = client.call("get_chart_data", {"bars": bars})
+    return {"o": result["open"], "h": result["high"],
+            "l": result["low"], "c": result["close"]}`},
+    {cat:'mcp', name:'mcp_set_symbol', desc:'Switch TradingView chart to a specific symbol via MCP command.', tags:['MCP','Navigation'],
+     code:`def set_symbol(client, symbol: str, timeframe="1D"):
+    client.call("set_symbol", {"symbol": symbol,
+        "timeframe": timeframe})
+    client.wait_for("chart_loaded")
+    return f"Loaded {symbol} @ {timeframe}"`},
+    {cat:'mcp', name:'mcp_add_indicator', desc:'Programmatically add a technical indicator to TradingView chart.', tags:['MCP','Indicator'],
+     code:`def add_indicator(client, name, params=None):
+    client.call("add_study", {"name": name,
+        "params": params or {}})
+    panel = "new" if name in ("RSI","MACD") else "same"
+    return f"Added {name} to chart ({panel})"`},
+    {cat:'mcp', name:'mcp_screenshot_chart', desc:'Capture a screenshot of current TradingView chart for visual analysis.', tags:['MCP','Vision'],
+     code:`import base64
+
+def screenshot_chart(client, fmt="png"):
+    raw = client.call("screenshot", {"format": fmt})
+    img_b64 = base64.b64encode(raw).decode()
+    return {"type": "image", "data": img_b64}`},
+    {cat:'mcp', name:'mcp_set_timeframe', desc:'Change active chart timeframe via MCP protocol.', tags:['MCP','Chart'],
+     code:`VALID_TF = {"1","5","15","60","240","1D","1W"}
+
+def set_timeframe(client, tf: str):
+    if tf not in VALID_TF:
+        raise ValueError(f"Invalid TF: {tf}")
+    client.call("set_timeframe", {"timeframe": tf})`},
+    {cat:'mcp', name:'mcp_export_to_db', desc:'Export Claude MCP analysis results to Supabase database.', tags:['MCP','Database'],
+     code:`from supabase import create_client
+
+def export_to_db(coin, analysis):
+    sb = create_client(SUPABASE_URL, SUPABASE_KEY)
+    sb.table("coin_analysis").upsert(
+        {"coin": coin, "signal": analysis}
+    ).execute()`},
+    {cat:'mcp', name:'mcp_alert_manager', desc:'Create and manage price alerts on TradingView via MCP.', tags:['MCP','Alerts'],
+     code:`def create_alert(client, price, condition="crosses"):
+    client.call("create_alert", {"price": price,
+        "condition": condition, "notify": ["popup","email"]})
+    return f"Alert set @ {price}"`},
+    {cat:'mcp', name:'mcp_scan_watchlist', desc:'Iterate through entire TradingView watchlist and run Claude analysis on each coin.', tags:['MCP','Scanner'],
+     code:`def scan_watchlist(client):
+    symbols = client.call("get_watchlist")
+    results = []
+    for sym in symbols:
+        data = read_chart_data(client)
+        results.append(claude_analyze(sym, data))
+    return results`},
+
+    // Chart Analysis (10)
+    {cat:'chart', name:'detect_support_resistance', desc:'Detect key support and resistance levels from OHLCV price data.', tags:['Analysis','S&R'],
+     code:`def detect_sr(highs, lows, n=5):
+    support = [round(l,2) for l in lows[-n:]]
+    resist  = [round(h,2) for h in highs[-n:]]
+    return {"support": support, "resistance": resist}`},
+    {cat:'chart', name:'identify_trend_direction', desc:'Classify market trend as bullish, bearish, or sideways using EMA.', tags:['Analysis','Trend'],
+     code:`def identify_trend(close, fast=50, slow=200):
+    ema_f, ema_s = calc_ema(close, fast), calc_ema(close, slow)
+    diff = ema_f[-1] - ema_s[-1]
+    if diff > 0: return "Bullish"
+    elif diff < 0: return "Bearish"
+    return "Sideways"`},
+    {cat:'chart', name:'find_chart_patterns', desc:'Detect classic chart patterns: double top, double bottom, head & shoulders.', tags:['Pattern','Analysis'],
+     code:`def find_patterns(highs, lows):
+    peaks = [i for i in range(1, len(highs)-1)
+             if highs[i] > highs[i-1] and highs[i] > highs[i+1]]
+    patterns = []
+    if len(peaks) >= 2:
+        patterns.append("double_top")
+    return patterns`},
+    {cat:'chart', name:'detect_divergence', desc:'Detect bullish and bearish RSI/MACD divergence from price action.', tags:['Divergence','RSI'],
+     code:`def detect_divergence(close, rsi):
+    price_highs = local_peaks(close)
+    rsi_highs = local_peaks(rsi)
+    if price_highs[-1] > price_highs[-2] and rsi_highs[-1] < rsi_highs[-2]:
+        return "bearish_divergence"
+    return "no_divergence"`},
+    {cat:'chart', name:'calculate_pivot_points', desc:'Calculate Classic, Fibonacci, and Camarilla pivot points.', tags:['Pivots','S&R'],
+     code:`def pivot_points(high, low, close):
+    pp = (high + low + close) / 3
+    r1, s1 = round(2*pp - low, 2), round(2*pp - high, 2)
+    return {"PP": pp, "R1": r1, "S1": s1}`},
+    {cat:'chart', name:'identify_fibonacci_levels', desc:'Calculate Fibonacci retracement and extension levels.', tags:['Fibonacci','S&R'],
+     code:`FIBS = [0, 0.236, 0.382, 0.5, 0.618, 0.786, 1]
+
+def fibonacci_levels(swing_high, swing_low):
+    diff = swing_high - swing_low
+    return {f"Fib_{int(f*100)}": round(swing_high - diff*f, 2)
+            for f in FIBS}`},
+    {cat:'chart', name:'measure_trend_strength', desc:'Measure trend strength using Average Directional Index (ADX).', tags:['ADX','Trend'],
+     code:`def calc_adx(high, low, close, period=14):
+    tr = true_range(high, low, close)
+    dx = directional_index(high, low, tr)
+    adx = smooth(dx, period)
+    return "Strong" if adx[-1] > 25 else "Moderate" if adx[-1] > 20 else "Weak"`},
+    {cat:'chart', name:'detect_candlestick_patterns', desc:'Identify key candlestick patterns: doji, hammer, engulfing, shooting star.', tags:['Candles','Pattern'],
+     code:`def find_candles(o, h, l, c):
+    body, rng = abs(c-o), h-l
+    if body < 0.1 * rng: return "doji"
+    if (min(o,c)-l) > 2*body: return "hammer"
+    return "normal"`},
+    {cat:'chart', name:'find_breakout_levels', desc:'Detect price breakouts from consolidation zones.', tags:['Breakout','Analysis'],
+     code:`def find_breakout(close, lookback=20):
+    recent_high = max(close[-lookback:-1])
+    recent_low = min(close[-lookback:-1])
+    if close[-1] > recent_high: return "bullish_breakout"
+    if close[-1] < recent_low: return "bearish_breakout"
+    return "consolidating"`},
+    {cat:'chart', name:'detect_volume_anomalies', desc:'Identify unusual volume spikes that signal potential price moves.', tags:['Volume','Pattern'],
+     code:`def detect_vol_spike(volume, threshold=2.0):
+    avg_vol = sum(volume[-20:-1]) / 19
+    ratio = volume[-1] / avg_vol
+    severity = "high" if ratio > 3 else "medium"
+    return {"is_spike": ratio > threshold, "ratio": ratio, "severity": severity}`},
+
+    // Market Scanner (8)
+    {cat:'scanner', name:'scan_buy_signals', desc:'Scan all coins for bullish buy setups (EMA + RSI + MACD).', tags:['Scanner','Buy'],
+     code:`def scan_buy_signals(coins):
+    return [c for c in coins if calc_rsi(c) < 40
+            and ema_cross(c) == "golden"
+            and macd_positive(c)]`},
+    {cat:'scanner', name:'scan_oversold', desc:'Find coins in oversold territory (RSI < 30) for potential reversal.', tags:['Scanner','RSI'],
+     code:`def scan_oversold(coins, threshold=30):
+    return [c for c in coins if calc_rsi(c) < threshold]`},
+    {cat:'scanner', name:'scan_golden_cross', desc:'Identify coins where EMA 20 has recently crossed above EMA 50.', tags:['Scanner','EMA'],
+     code:`def scan_golden_cross(coins, lookback=5):
+    signals = []
+    for c in coins:
+        e20, e50 = calc_ema(c, 20), calc_ema(c, 50)
+        if e20[-1] > e50[-1] and e20[-2] <= e50[-2]:
+            signals.append(c)
+    return signals`},
+    {cat:'scanner', name:'scan_death_cross', desc:'Detect coins where EMA 20 crossed below EMA 50 recently.', tags:['Scanner','Bearish'],
+     code:`def scan_death_cross(coins, lookback=5):
+    for c in coins:
+        e20, e50 = calc_ema(c, 20), calc_ema(c, 50)
+        if e20[-1] < e50[-1] and e20[-2] >= e50[-2]:
+            signals.append(c)
+    return signals`},
+    {cat:'scanner', name:'scan_overbought', desc:'Find overbought coins (RSI > 70) that may be ready for pullback.', tags:['Scanner','RSI'],
+     code:`def scan_overbought(coins, threshold=70):
+    return [{"coin": c, "rsi": r} for c, r in
+            ((c, calc_rsi(c)) for c in coins) if r > threshold]`},
+    {cat:'scanner', name:'scan_volume_breakout', desc:'Find coins breaking out of consolidation with high volume confirmation.', tags:['Scanner','Volume'],
+     code:`def scan_vol_breakout(coins):
+    hits = []
+    for c in coins:
+        if find_breakout(c) != "consolidating" and detect_vol_spike(c)["is_spike"]:
+            hits.append(c)
+    return hits`},
+    {cat:'scanner', name:'scan_top_setups', desc:'Rank all coins by signal quality score and return top N setups.', tags:['Scanner','Ranking'],
+     code:`def scan_top_setups(coins, top_n=10):
+    scored = [(c, compute_signal_score(c)) for c in coins]
+    scored.sort(key=lambda x: -x[1])
+    return scored[:top_n]`},
+    {cat:'scanner', name:'scan_macd_crossover', desc:'Detect MACD line crossover above/below signal line.', tags:['Scanner','MACD'],
+     code:`def scan_macd_cross(coins):
+    hits = []
+    for c in coins:
+        macd, sig = calc_macd(c)
+        direction = "bullish" if macd[-1] > sig[-1] else "bearish"
+        if cross(macd, sig): hits.append((c, direction))
+    return hits`},
+
+    // Indicators (8)
+    {cat:'indicator', name:'calculate_rsi', desc:'Pure Python RSI calculation without external dependencies.', tags:['RSI','Indicator'],
+     code:`def calc_rsi(close, period=14):
+    deltas = [close[i]-close[i-1] for i in range(1,len(close))]
+    gains = [max(d,0) for d in deltas]
+    losses = [max(-d,0) for d in deltas]
+    avg_gain, avg_loss = sum(gains[-period:])/period, sum(losses[-period:])/period
+    rs = avg_gain / avg_loss if avg_loss else 100
+    return round(100 - (100/(1+rs)), 2)`},
+    {cat:'indicator', name:'calculate_ema', desc:'Exponential Moving Average with configurable period.', tags:['EMA','Indicator'],
+     code:`def calc_ema(data, period=20):
+    k = 2 / (period + 1)
+    ema = [data[0]]
+    for price in data[1:]:
+        ema.append(price*k + ema[-1]*(1-k))
+    return ema`},
+    {cat:'indicator', name:'calculate_macd', desc:'MACD indicator with configurable fast, slow and signal periods.', tags:['MACD','Indicator'],
+     code:`def calc_macd(close, fast=12, slow=26, sig=9):
+    ema_f, ema_s = calc_ema(close, fast), calc_ema(close, slow)
+    macd_line = [f-s for f, s in zip(ema_f, ema_s)]
+    sig_line = calc_ema(macd_line, sig)
+    return macd_line, sig_line`},
+    {cat:'indicator', name:'calculate_bollinger_bands', desc:'Bollinger Bands with configurable period and standard deviation multiplier.', tags:['BB','Indicator'],
+     code:`def bollinger_bands(close, period=20, mult=2):
+    sma = sum(close[-period:]) / period
+    std = stdev(close[-period:])
+    return {"upper": sma+mult*std, "mid": sma, "lower": sma-mult*std}`},
+    {cat:'indicator', name:'calculate_stochastic', desc:'Stochastic oscillator %K and %D lines.', tags:['Stoch','Indicator'],
+     code:`def stochastic(high, low, close, k=14, d=3):
+    ll, hh = min(low[-k:]), max(high[-k:])
+    k_val = 100 * (close[-1]-ll) / (hh-ll)
+    d_val = calc_sma_values(k_val, d)
+    return k_val, d_val`},
+    {cat:'indicator', name:'calculate_atr', desc:'Average True Range for volatility measurement and stop loss calculation.', tags:['ATR','Volatility'],
+     code:`def calc_atr(high, low, close, period=14):
+    tr_list = []
+    for i in range(1, len(close)):
+        tr = max(high[i]-low[i], abs(high[i]-close[i-1]),
+                  abs(low[i]-close[i-1]))
+        tr_list.append(tr)
+    return sum(tr_list[-period:]) / period`},
+    {cat:'indicator', name:'calculate_vwap', desc:'Volume Weighted Average Price for intraday fair value reference.', tags:['VWAP','Indicator'],
+     code:`def calc_vwap(high, low, close, volume):
+    typical = [(h+l+c)/3 for h,l,c in zip(high, low, close)]
+    cum_vol = sum(volume)
+    return sum(t*v for t,v in zip(typical, volume)) / cum_vol`},
+    {cat:'indicator', name:'calculate_ichimoku', desc:'Ichimoku cloud components: Tenkan, Kijun, Senkou A/B, Chikou.', tags:['Ichimoku','Indicator'],
+     code:`def calc_ichimoku(high, low, close):
+    tenkan = (max(high[-9:]) + min(low[-9:])) / 2
+    kijun  = (max(high[-26:]) + min(low[-26:])) / 2
+    senkou_a = (tenkan + kijun) / 2
+    return {"tenkan": tenkan, "kijun": kijun, "senkou_a": senkou_a}`},
+
+    // Pine Script (7)
+    {cat:'pine', name:'sr_indicator_pine', desc:'Pine Script indicator to automatically draw S&R levels on TradingView chart.', tags:['Pine','S&R'],
+     code:`//@version=5
+indicator("Claude S&R Levels", overlay=true)
+ph = ta.pivothigh(high, 10, 10)
+pl = ta.pivotlow(low, 10, 10)
+plot(ph, style=plot.style_circles, color=color.red)
+plot(pl, style=plot.style_circles, color=color.green)`},
+    {cat:'pine', name:'signal_indicator_pine', desc:'Pine Script buy/sell signal indicator based on EMA + RSI combo.', tags:['Pine','Signals'],
+     code:`//@version=5
+indicator("Claude Signal", overlay=true)
+ema20 = ta.ema(close, 20)
+ema50 = ta.ema(close, 50)
+rsi = ta.rsi(close, 14)
+buy = ta.crossover(ema20, ema50) and rsi < 65
+plotshape(buy, style=shape.triangleup, location=location.belowbar, color=color.green)`},
+    {cat:'pine', name:'generate_pine_from_claude', desc:'Use Claude API to generate custom Pine Script from natural language description.', tags:['Pine','Claude API'],
+     code:`import anthropic
+
+def generate_pine(description):
+    client = anthropic.Anthropic()
+    msg = client.messages.create(model="claude-sonnet-4-5",
+        max_tokens=1024,
+        messages=[{"role":"user","content":
+            f"Write Pine Script v5 for: {description}"}])
+    return msg`},
+    {cat:'pine', name:'pivot_script_pine', desc:'Pine Script that plots classic pivot points with R1-R3 and S1-S3 levels.', tags:['Pine','Pivots'],
+     code:`//@version=5
+indicator("Claude Pivot Points", overlay=true)
+[pp, r1, s1] = calc_pivots(high[1], low[1], close[1])
+plot(pp, "PP", color.orange)
+plot(r1, "R1", color.red)
+plot(s1, "S1", color.green)`},
+    {cat:'pine', name:'custom_strategy_pine', desc:'Pine Script strategy template with entry/exit conditions and risk management.', tags:['Pine','Strategy'],
+     code:`//@version=5
+strategy("Claude Strategy", overlay=true, default_qty_value=10000)
+ema20 = ta.ema(close, 20)
+if ta.crossover(close, ema20)
+    strategy.entry("Long", strategy.long)
+if ta.crossunder(close, ema20)
+    strategy.close("Long")`},
+    {cat:'pine', name:'alert_script_pine', desc:'Pine Script alert system that fires on key price level touches.', tags:['Pine','Alerts'],
+     code:`//@version=5
+indicator("Claude Alerts", overlay=true)
+support = input.float(90000, "Support Level")
+resistance = input.float(98000, "Resistance Level")
+alertcondition(close <= support, "Touch Support")
+alertcondition(close >= resistance, "Touch Resistance")`},
+    {cat:'pine', name:'multi_indicator_dashboard', desc:'Pine Script dashboard overlay showing RSI, MACD, signal, and trend status in a table.', tags:['Pine','Dashboard'],
+     code:`//@version=5
+indicator("Claude Dashboard", overlay=true)
+var table dash = table.new(position.top_right, 2, 4)
+table.cell(dash, 0, 0, "RSI")
+table.cell(dash, 1, 0, str.tostring(ta.rsi(close,14)))`},
+
+    // Data Pipeline (7)
+    {cat:'data', name:'fetch_ohlcv_coingecko', desc:'Fetch OHLCV data for any coin from CoinGecko API.', tags:['Data','CoinGecko'],
+     code:`import requests
+
+def fetch_ohlcv(coin_id, days=365):
+    url = f"https://api.coingecko.com/api/v3/coins/{coin_id}/ohlc"
+    params = {"vs_currency": "usd", "days": days}
+    return requests.get(url, params=params).json()`},
+    {cat:'data', name:'fetch_top100_coingecko', desc:'Fetch top 100 cryptocurrencies by market cap from CoinGecko.', tags:['Data','CoinGecko'],
+     code:`def fetch_top100():
+    url = "https://api.coingecko.com/api/v3/coins/markets"
+    params = {"vs_currency": "usd", "order": "market_cap_desc", "per_page": 100}
+    return requests.get(url, params=params).json()`},
+    {cat:'data', name:'cache_to_supabase', desc:'Store Claude analysis results to Supabase PostgreSQL database.', tags:['Data','Supabase'],
+     code:`from supabase import create_client
+
+def cache_to_supabase(results: list):
+    sb = create_client(SUPABASE_URL, SUPABASE_SERVICE_KEY)
+    sb.table("coin_analysis").upsert(results).execute()`},
+    {cat:'data', name:'run_batch_analysis', desc:'Process all 100 coins in parallel and aggregate results.', tags:['Data','Batch'],
+     code:`import concurrent.futures as futures
+
+def run_batch_analysis(coins, max_workers=10):
+    with futures.ThreadPoolExecutor(max_workers) as ex:
+        results = list(ex.map(analyze_coin, coins))
+    return results`},
+    {cat:'data', name:'normalize_price_data', desc:'Normalize and validate OHLCV data before analysis.', tags:['Data','Utils'],
+     code:`def normalize_ohlcv(raw: dict) -> dict:
+    for key in ("open","high","low","close"):
+        if key not in raw or raw[key] is None:
+            raise ValueError(f"Missing {key}")
+        raw[key] = float(raw[key])
+    return raw`},
+    {cat:'data', name:'schedule_daily_cron', desc:'Set up a daily cron job to refresh all coin analysis automatically.', tags:['Data','Scheduler'],
+     code:`from apscheduler.schedulers.blocking import BlockingScheduler
+
+sched = BlockingScheduler()
+sched.add_job(run_batch_analysis, "cron", hour=0, minute=0)
+sched.start()`},
+    {cat:'data', name:'export_analysis_json', desc:'Export all cached analysis results to JSON file.', tags:['Data','Export'],
+     code:`import json, datetime
+
+def export_json(results, path="analysis.json"):
+    payload = {"generated": str(datetime.datetime.utcnow()),
+               "analysis": results}
+    with open(path, "w") as f:
+        json.dump(payload, f, indent=2)`},
+
+    // Claude AI (8)
+    {cat:'ai', name:'generate_market_narrative', desc:'Use Claude to write a natural language market analysis narrative.', tags:['Claude API','Narrative'],
+     code:`def market_narrative(coin, buy, sell, neutral):
+    msg = client.messages.create(model="claude-sonnet-4-5",
+        max_tokens=150,
+        messages=[{"role":"user","content":
+            f"Summarize market for {coin} (buy:{buy} sell:{sell} neutral:{neutral})"}])
+    return msg`},
+    {cat:'ai', name:'rate_signal_quality', desc:'Ask Claude to rate the quality of a trading signal from 0-100.', tags:['Claude API','Scoring'],
+     code:`def rate_signal(analysis: dict) -> int:
+    msg = client.messages.create(model="claude-sonnet-4-5",
+        max_tokens=10,
+        messages=[{"role":"user","content":
+            f"Rate this signal 0-100. Return only the number. Data: {analysis}"}])
+    return int(msg.content[0].text.strip())`},
+    {cat:'ai', name:'analyze_chart_screenshot', desc:'Pass TradingView chart screenshot to Claude vision for S&R detection.', tags:['Claude API','Vision'],
+     code:`def analyze_chart_image(img_b64):
+    msg = client.messages.create(model="claude-sonnet-4-5",
+        max_tokens=500,
+        messages=[{"role":"user","content":[
+            {"type":"image","source":{"type":"base64","media_type":"image/png","data":img_b64}},
+            {"type":"text","text":"List key S&R levels."}]}])
+    return msg`},
+    {cat:'ai', name:'explain_indicator', desc:'Ask Claude to explain what an indicator reading means for a coin.', tags:['Claude API','Education'],
+     code:`def explain_indicator(name, value, coin):
+    msg = client.messages.create(model="claude-sonnet-4-5",
+        max_tokens=100,
+        messages=[{"role":"user","content":
+            f"Explain {name}={value} for {coin} in one sentence."}])
+    return msg`},
+    {cat:'ai', name:'generate_trade_plan', desc:'Generate a complete trade plan with entry, stop loss, and take profit levels.', tags:['Claude API','Trade'],
+     code:`def generate_trade_plan(coin, signal):
+    msg = client.messages.create(model="claude-sonnet-4-5",
+        max_tokens=400,
+        messages=[{"role":"user","content":
+            f"Create trade plan with entry, stop loss and take profit for {coin}. Signal: {signal}"}])
+    return msg`},
+    {cat:'ai', name:'compare_two_coins', desc:'Ask Claude to compare two coins and recommend the better setup.', tags:['Claude API','Compare'],
+     code:`def compare_coins(coin_a, coin_b):
+    msg = client.messages.create(model="claude-sonnet-4-5",
+        max_tokens=200,
+        messages=[{"role":"user","content":
+            f"Compare {coin_a} vs {coin_b} as trading setups. Which is better? Max 3 sentences."}])
+    return msg`},
+    {cat:'ai', name:'summarize_market_conditions', desc:"Get Claude to write a market-wide overview based on aggregate signal data.", tags:['Claude API','Summary'],
+     code:`def market_summary(buy, sell, neutral):
+    msg = client.messages.create(model="claude-sonnet-4-5",
+        max_tokens=150,
+        messages=[{"role":"user","content":
+            f"Summarize market: buy={buy}, sell={sell}, neutral={neutral} out of 100 coins."}])
+    return msg`},
+    {cat:'ai', name:'validate_sr_with_claude', desc:'Ask Claude to validate and rank S&R levels by significance.', tags:['Claude API','S&R'],
+     code:`def validate_sr(coin, price_history, levels):
+    msg = client.messages.create(model="claude-sonnet-4-5",
+        max_tokens=300,
+        messages=[{"role":"user","content":
+            f"For {coin}, rank these levels by significance: {levels}"}])
+    return msg`},
+  ];
+
+  const badgeLabel = {mcp:'MCP', chart:'CHART', scanner:'SCANNER', indicator:'INDICATOR', pine:'PINE', data:'DATA', ai:'AI'};
+
+  // ---- Render filter tabs ----
+  const catCounts = {};
+  SKILLS.forEach(s=>{ catCounts[s.cat] = (catCounts[s.cat]||0)+1; });
+  const tabsEl = document.getElementById('filterTabs');
+  CATS.forEach(c=>{
+    const btn = document.createElement('button');
+    const count = c.key==='all' ? SKILLS.length : (catCounts[c.key]||0);
+    btn.textContent = `${c.label} (${count})`;
+    btn.dataset.key = c.key;
+    if(c.key==='all') btn.classList.add('active');
+    btn.addEventListener('click', ()=>{
+      document.querySelectorAll('.filter-tabs button').forEach(b=>b.classList.remove('active'));
+      btn.classList.add('active');
+      state.cat = c.key;
+      render();
+    });
+    tabsEl.appendChild(btn);
+  });
+
+  const grid = document.getElementById('skillsGrid');
+  const noResults = document.getElementById('noResults');
+  const state = { cat:'all', q:'' };
+
+  function render(){
+    const q = state.q.trim().toLowerCase();
+    const filtered = SKILLS.filter(s=>{
+      const catOk = state.cat==='all' || s.cat===state.cat;
+      const text = (s.name+' '+s.desc+' '+s.tags.join(' ')).toLowerCase();
+      const qOk = !q || text.includes(q);
+      return catOk && qOk;
+    });
+    grid.innerHTML = '';
+    if(filtered.length===0){ noResults.style.display='block'; return; }
+    noResults.style.display='none';
+    filtered.forEach(s=>{
+      const card = document.createElement('div');
+      card.className = 'skill-card';
+      card.innerHTML = `
+        <div class="skill-card-head">
+          <div class="skill-name">${s.name}</div>
+          <span class="badge badge-${s.cat}">${badgeLabel[s.cat]}</span>
+        </div>
+        <div class="skill-desc">${s.desc}</div>
+        <div class="code-box">${highlight(s.code)}</div>
+        <div class="skill-foot">
+          <div class="skill-tags">${s.tags.map(t=>`<span>${t}</span>`).join('')}</div>
+          <div class="skill-actions"><a href="#">VIEW →</a><a href="#" class="copy">Copy</a></div>
+        </div>`;
+      grid.appendChild(card);
+    });
+  }
+
+  document.getElementById('searchInput').addEventListener('input', e=>{
+    state.q = e.target.value;
+    render();
+  });
+
+  render();
+</script>
+</body>
+</html>

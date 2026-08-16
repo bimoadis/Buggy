@@ -1,0 +1,58 @@
+# The 7-Question Gate
+
+Every finding must pass all 7 questions before a report gets written.
+**One wrong answer = kill the finding and move on.**
+
+## The 7 Questions
+
+1. **Is this in scope?**
+   Check the program's scope page. Asset, subdomain, and vulnerability type must all be in scope. If unsure — it's out.
+
+2. **Can I prove it's exploitable?**
+   You need a working PoC. "Theoretically exploitable" is not exploitable. Reproduce it yourself.
+
+3. **Is there real impact?**
+   What does an attacker actually gain? Data exposure, account takeover, privilege escalation, financial damage. If the impact is "information disclosure of non-sensitive data" — reconsider.
+
+4. **Did I reproduce it twice?**
+   One reproduction could be noise. Two clean reproductions on the same path means it's real.
+
+5. **Is the PoC clean?**
+   Your PoC must be minimal, documented, and reproduce in isolation. No dependencies on your local state. Another researcher must be able to follow your steps and get the same result.
+
+6. **Have I checked for duplicates?**
+   Search HackerOne / Bugcrowd / the program's public disclosed reports. If a variant of this was reported and triaged as N/A, understand why before submitting.
+
+7. **Would I be proud to send this?**
+   If you'd hesitate to show this to a senior security engineer, it's not ready. Polish the impact statement, clean the title, verify the CVSS.
+
+## The kill rule
+
+If you answer **No** or **Unsure** to any question — **kill the finding**. Do not submit speculative reports. Your N/A ratio is your reputation.
+
+## CVSS 3.1 quick reference
+
+<table>
+  <thead>
+    <tr><th>Severity</th><th>Score</th><th>Common examples</th></tr>
+  </thead>
+  <tbody>
+    <tr><td>Critical</td><td>9.0–10.0</td><td>Pre-auth RCE, SQLi on user PII, ATO at scale</td></tr>
+    <tr><td>High</td><td>7.0–8.9</td><td>Auth bypass, stored XSS on admin panel, SSRF to IMDS</td></tr>
+    <tr><td>Medium</td><td>4.0–6.9</td><td>IDOR (limited data), CSRF with low-value action, open redirect</td></tr>
+    <tr><td>Low</td><td>0.1–3.9</td><td>Info disclosure (non-sensitive), self-XSS</td></tr>
+    <tr><td>Informational</td><td>—</td><td>Findings with no direct exploitability</td></tr>
+  </tbody>
+</table>
+
+## 60-second pre-submit checklist
+
+```
+[ ] Title uses: [VulnType] in [Component] allows [Impact]
+[ ] Severity matches CVSS score
+[ ] Steps to reproduce are numbered and complete
+[ ] PoC includes request + response (or video)
+[ ] Impact statement is concrete (what data, whose account, what privilege)
+[ ] No duplicate found in program history
+[ ] All 7 Gate questions answered Yes
+```

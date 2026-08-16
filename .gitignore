@@ -1,0 +1,43 @@
+# Day-one artifacts — never commit
+CLAUDE.md
+ZAUTH-GUIDE.md
+example.README.md
+*-ui.jsx
+REFERENCE*.md
+
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build output
+.next/
+out/
+dist/
+build/
+
+# Environment
+.env
+.env.*
+!.env.local.example
+
+# Vercel
+.vercel
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log
+npm-debug.log*
+
+# TypeScript
+*.tsbuildinfo
+next-env.d.ts

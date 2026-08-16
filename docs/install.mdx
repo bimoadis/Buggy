@@ -1,0 +1,66 @@
+# Install
+
+Detailed installation for both Claude Chat and Claude Code.
+
+## Skill ZIP structure
+
+Each skill is a single folder containing one `SKILL.md` file.
+Upload exactly one skill folder per ZIP — uploading multiple `SKILL.md` files will error.
+
+```
+hunt-sqli/
+└── SKILL.md   ← must be exactly one per zip
+```
+
+## Claude Chat install
+
+### Upload a single skill
+
+1. Zip the skill folder: `zip -r hunt-sqli.zip hunt-sqli/`
+2. Go to [claude.ai/customize/skills](https://claude.ai/customize/skills)
+3. Click **Upload skill** and select your ZIP
+4. Verify the skill name appears in your skill list
+
+### Upload the full bundle
+
+If your Claude plan supports multiple custom skills:
+
+```bash
+# Clone the repo
+git clone https://github.com/elementalsouls/Claude-BugHunter
+
+# Zip each domain or individual skill
+cd Claude-BugHunter/skills
+zip -r web-hunting.zip web-hunting/
+```
+
+Upload each ZIP separately to claude.ai.
+
+## Claude Code install
+
+```bash
+# Claude Code reads skills from the project directory
+git clone https://github.com/elementalsouls/Claude-BugHunter
+cd Claude-BugHunter
+claude
+```
+
+Skills auto-load when Claude Code detects relevant context in the conversation.
+
+## Verifying install
+
+Type the skill command in a new conversation:
+
+```
+/hunt-sqli
+```
+
+If the skill is loaded, Claude will respond with the skill's context and ask for a target.
+If not, upload the ZIP again or check that only one `SKILL.md` exists in the archive.
+
+## Updating skills
+
+```bash
+git pull origin main
+# Re-zip and re-upload changed skills to claude.ai
+```

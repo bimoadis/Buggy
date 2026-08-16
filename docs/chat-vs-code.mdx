@@ -1,0 +1,58 @@
+# Chat vs Code
+
+buggy skills work in both Claude Chat and Claude Code — but each environment has different strengths.
+
+## When to use Claude Chat
+
+**Best for:** Static code review, report drafting, learning attack patterns
+
+<table>
+  <thead><tr><th>Task</th><th>Chat</th></tr></thead>
+  <tbody>
+    <tr><td>Review a code file for vulnerabilities</td><td>✓</td></tr>
+    <tr><td>Analyze a JWT or OAuth flow</td><td>✓</td></tr>
+    <tr><td>Draft a bug bounty report</td><td>✓</td></tr>
+    <tr><td>Run the 7-Question Gate on a finding</td><td>✓</td></tr>
+    <tr><td>Score and audit a smart contract</td><td>✓</td></tr>
+  </tbody>
+</table>
+
+**How:** Upload skill ZIP → paste your target code or request → activate with the skill command.
+
+## When to use Claude Code
+
+**Best for:** Live target scanning, automated recon, tool-assisted hunting
+
+<table>
+  <thead><tr><th>Task</th><th>Code</th></tr></thead>
+  <tbody>
+    <tr><td>Hunt a live target (/hunt target.com)</td><td>✓</td></tr>
+    <tr><td>Run subdomain enumeration with real tools</td><td>✓</td></tr>
+    <tr><td>Execute the APK red-team pipeline</td><td>✓</td></tr>
+    <tr><td>Chain recon → hunt → report in one session</td><td>✓</td></tr>
+    <tr><td>Pull live HTTP responses and analyze them</td><td>✓</td></tr>
+  </tbody>
+</table>
+
+**How:** `claude` in the skills directory → `/hunt https://target.com`
+
+## Environment pills
+
+Skills on this site show a pill indicating which environment they support:
+
+- **Chat ✓** — works in Claude Chat (static analysis, no live tools)
+- **Both ✓** — works in both Chat and Code
+- **Limited ⚠** — requires Claude Code for full functionality
+
+## Key differences
+
+<table>
+  <thead><tr><th></th><th>Chat</th><th>Code</th></tr></thead>
+  <tbody>
+    <tr><td>Live HTTP requests</td><td>✗</td><td>✓</td></tr>
+    <tr><td>Tool execution (ffuf, nuclei)</td><td>✗</td><td>✓</td></tr>
+    <tr><td>File system access</td><td>✗</td><td>✓</td></tr>
+    <tr><td>Context window</td><td>Large</td><td>Large</td></tr>
+    <tr><td>Skill auto-load</td><td>Via ZIP upload</td><td>Via project directory</td></tr>
+  </tbody>
+</table>

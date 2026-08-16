@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Docs — Claude MCPTrade</title>
+<style>
+  :root{
+    --bg:#fafaf8;
+    --white:#fff;
+    --border:#e5e5e5;
+    --border2:#d4d4d4;
+    --text:#0a0a0a;
+    --text2:#525252;
+    --text3:#a1a1aa;
+    --orange:#ff6b00;
+    --orange-bg:#fff4ee;
+    --orange-border:#ffd4b8;
+    --green:#16a34a;
+    --green-bg:#f0fdf4;
+    --red:#dc2626;
+    --purple:#7c3aed;
+    --blue:#2563eb;
+    --term-bg:#0d0d0d;
+    --term-green:#22c55e;
+    --term-orange:#fb923c;
+    --term-blue:#60a5fa;
+    --term-purple:#c084fc;
+    --term-white:#f5f5f5;
+    --mono:"Geist Mono","SFMono-Regular",Menlo,Consolas,monospace;
+    --sans:"Geist","Inter",-apple-system,"Segoe UI",sans-serif;
+  }
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+  body{background:var(--bg);color:var(--text);font-family:var(--sans);font-size:14px;line-height:1.6;-webkit-font-smoothing:antialiased;}
+  a{color:inherit;text-decoration:none;}
+
+  .promo-bar{background:var(--text);color:#fff;font-family:var(--mono);font-size:11px;padding:7px 24px;display:flex;align-items:center;justify-content:center;gap:16px;letter-spacing:0.05em;position:relative;z-index:300;flex-wrap:wrap;}
+  .promo-bar .star{color:var(--orange);}
+  .promo-live{background:var(--orange);color:#fff;padding:1px 7px;border-radius:3px;font-weight:700;letter-spacing:0.08em;}
+
+  header{display:flex;align-items:center;justify-content:space-between;padding:14px 28px;border-bottom:1px solid var(--border);background:var(--white);position:sticky;top:0;z-index:200;}
+  .brand{display:flex;align-items:center;gap:10px;font-weight:700;font-size:16px;}
+  .brand .logo{width:26px;height:26px;background:var(--text);color:#fff;border-radius:5px;display:flex;align-items:center;justify-content:center;font-size:13px;}
+  .brand .accent{color:var(--orange);}
+  nav.mainnav{display:flex;gap:28px;font-size:13px;color:var(--text2);}
+  nav.mainnav a{padding:4px 0;border-bottom:2px solid transparent;}
+  nav.mainnav a.active{color:var(--text);border-bottom-color:var(--orange);font-weight:600;}
+  .header-right{display:flex;align-items:center;gap:16px;font-size:12px;color:var(--text2);}
+  .status-dot{width:7px;height:7px;border-radius:50%;background:var(--green);display:inline-block;margin-right:6px;box-shadow:0 0 0 3px var(--green-bg);}
+  .icon-btn{width:30px;height:30px;border:1px solid var(--border);border-radius:6px;display:flex;align-items:center;justify-content:center;font-size:14px;color:var(--text2);}
+
+  .mcp-ticker{background:var(--term-bg);color:var(--term-white);font-family:var(--mono);font-size:12px;padding:9px 0;overflow:hidden;white-space:nowrap;border-bottom:1px solid #000;}
+  .mcp-ticker .track{display:inline-flex;gap:56px;padding-left:20px;animation:scroll-left 34s linear infinite;}
+  .mcp-ticker .fn{color:var(--term-blue);}
+  @keyframes scroll-left{from{transform:translateX(0);}to{transform:translateX(-50%);}}
+  @media (prefers-reduced-motion: reduce){.mcp-ticker .track{animation:none;}}
+
+  .docs-layout{display:grid;grid-template-columns:240px 1fr;max-width:1400px;margin:0 auto;}
+  .docs-sidebar{
+    border-right:1px solid var(--border);
+    padding:32px 24px;
+    position:sticky;
+    top:97px;
+    height:calc(100vh - 97px);
+    overflow-y:auto;
+  }
+  .sidebar-label{font-family:var(--mono);font-size:11px;color:var(--text3);letter-spacing:0.06em;margin-bottom:16px;}
+  .sidebar-nav a{
+    display:block;
+    font-family:var(--mono);
+    font-size:13px;
+    color:var(--text2);
+    padding:7px 0;
+  }
+  .sidebar-nav a:hover{color:var(--text);}
+  .sidebar-nav a.active{color:var(--text);font-weight:700;}
+  .sidebar-divider{border-top:1px solid var(--border);margin:20px 0;}
+  .sidebar-footer-link{
+    display:flex;align-items:center;gap:8px;
+    font-family:var(--mono);font-size:12.5px;color:var(--text2);
+  }
+
+  .docs-content{padding:40px 56px 120px;max-width:900px;}
+  .doc-section{margin-bottom:56px;scroll-margin-top:110px;}
+  .eyebrow{font-family:var(--mono);font-size:11px;color:var(--orange);letter-spacing:0.08em;margin-bottom:14px;}
+  h1.doc-title{font-size:38px;font-weight:800;letter-spacing:-0.01em;line-height:1.15;margin-bottom:14px;}
+  h1.doc-title .hl{background:var(--text);color:#fff;padding:2px 10px;display:inline-block;}
+  .doc-lead{color:var(--text2);font-size:15.5px;max-width:640px;line-height:1.65;margin-bottom:8px;}
+  h2.doc-h2{font-size:22px;font-weight:800;margin-bottom:14px;letter-spacing:-0.01em;}
+  p.doc-p{color:var(--text2);font-size:14.5px;line-height:1.7;max-width:680px;margin-bottom:16px;}
+  code.inline{font-family:var(--mono);background:#f1f1ef;border:1px solid var(--border);padding:1px 6px;border-radius:4px;font-size:13px;}
+
+  .info-grid{display:grid;grid-template-columns:repeat(3,1fr);border:1px solid var(--border);border-radius:8px;overflow:hidden;margin:20px 0;background:#fff;}
+  .info-cell{padding:16px 18px;border-right:1px solid var(--border);border-bottom:1px solid var(--border);}
+  .info-cell:nth-child(3n){border-right:none;}
+  .info-cell:nth-last-child(-n+3){border-bottom:none;}
+  .info-label{font-family:var(--mono);font-size:10.5px;color:var(--text3);text-transform:uppercase;letter-spacing:0.04em;margin-bottom:6px;}
+  .info-value{font-family:var(--mono);font-size:14px;font-weight:700;}
+
+  .term-box{
+    background:var(--term-bg);
+    color:var(--term-white);
+    border-radius:8px;
+    padding:20px 22px;
+    font-family:var(--mono);
+    font-size:12.5px;
+    line-height:1.8;
+    overflow-x:auto;
+    margin:20px 0;
+  }
+  .term-box .lbl{color:var(--term-orange);}
+  .term-box .kw{color:var(--term-blue);}
+  .term-box .fn{color:var(--term-purple);}
+  .term-box .str{color:var(--term-green);}
+  .term-box .num{color:var(--term-orange);}
+  .term-box .mut{color:#737373;}
+  .term-box .arrow{color:#737373;}
+
+  table.doc-table{width:100%;border-collapse:collapse;margin:18px 0;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:#fff;}
+  table.doc-table th{
+    text-align:left;font-family:var(--mono);font-size:10.5px;color:var(--text3);
+    text-transform:uppercase;letter-spacing:0.04em;padding:10px 14px;
+    background:#fafafa;border-bottom:1px solid var(--border);
+  }
+  table.doc-table td{padding:12px 14px;border-bottom:1px solid var(--border);font-size:13px;vertical-align:top;}
+  table.doc-table tr:last-child td{border-bottom:none;}
+  table.doc-table code{font-family:var(--mono);font-size:12.5px;color:var(--orange);}
+
+  .tool-name{font-family:var(--mono);color:var(--orange);font-weight:700;}
+  .env-scope{font-family:var(--mono);font-size:10.5px;padding:2px 8px;border-radius:4px;}
+  .scope-client{background:#eff6ff;color:var(--blue);}
+  .scope-server{background:var(--orange-bg);color:var(--orange);}
+
+  .skill-cat-table td:nth-child(1){font-family:var(--mono);font-weight:700;}
+  .skill-cat-table td:nth-child(2){color:var(--text2);font-weight:600;text-align:center;}
+
+  .btn{font-family:var(--mono);font-size:12.5px;padding:11px 20px;border-radius:6px;letter-spacing:0.02em;cursor:pointer;display:inline-flex;align-items:center;gap:8px;border:1px solid var(--text);background:var(--text);color:#fff;margin-top:8px;}
+
+  .steps-list{list-style:none;margin:14px 0;}
+  .steps-list li{display:flex;gap:12px;margin-bottom:10px;font-size:14px;color:var(--text2);}
+  .steps-list b{color:var(--text);flex-shrink:0;font-family:var(--mono);}
+
+  footer{border-top:1px solid var(--border);padding:18px 28px;font-family:var(--mono);font-size:11px;color:var(--text3);display:flex;justify-content:space-between;flex-wrap:wrap;gap:8px;max-width:1400px;margin:0 auto;}
+
+  @media(max-width:960px){
+    .docs-layout{grid-template-columns:1fr;}
+    .docs-sidebar{position:static;height:auto;border-right:none;border-bottom:1px solid var(--border);}
+    .docs-content{padding:32px 24px 90px;}
+    nav.mainnav{display:none;}
+    .info-grid{grid-template-columns:1fr;}
+    .info-cell{border-right:none !important;}
+  }
+</style>
+</head>
+<body>
+
+  <div class="promo-bar">
+    <span class="star">★</span><span class="star">★</span><span class="star">★</span>
+    <span class="promo-live">LIVE</span>
+    <span>100 COINS ANALYZED BY CLAUDE MCP</span>
+    <span>· VIEW SKILLS →</span>
+    <span class="star">★</span><span class="star">★</span><span class="star">★</span>
+  </div>
+
+  <header>
+    <div class="brand">
+      <div class="logo">◧</div>
+      Claude <span class="accent">MCPTrade</span>
+    </div>
+    <nav class="mainnav">
+      <a href="mcptrade.html">Dashboard</a>
+      <a href="skills.html">Claude Skills</a>
+      <a href="docs.html" class="active">Docs</a>
+    </nav>
+    <div class="header-right">
+      <a href="#" class="icon-btn">𝕏</a>
+      <a href="#" class="icon-btn">⌥</a>
+      <span><span class="status-dot"></span>MCP Connected</span>
+    </div>
+  </header>
+
+  <div class="mcp-ticker"><div class="track" id="tickerTrack"></div></div>
+
+  <div class="docs-layout">
+    <aside class="docs-sidebar">
+      <div class="sidebar-label">[ ON THIS PAGE ]</div>
+      <nav class="sidebar-nav" id="sidebarNav">
+        <a href="#overview">Overview</a>
+        <a href="#architecture">Architecture</a>
+        <a href="#mcp-protocol">MCP Protocol</a>
+        <a href="#data-flow">Data Flow</a>
+        <a href="#quick-start">Quick Start</a>
+        <a href="#environment">Environment</a>
+        <a href="#skills-reference">Skills Reference</a>
+        <a href="#api-reference">API Reference</a>
+        <a href="#database-schema">Database Schema</a>
+      </nav>
+      <div class="sidebar-divider"></div>
+      <a href="skills.html" class="sidebar-footer-link">📋 Skills Library</a>
+    </aside>
+
+    <main class="docs-content">
+
+      <section class="doc-section" id="overview">
+        <div class="eyebrow">[ TECHNICAL DOCUMENTATION ]</div>
+        <h1 class="doc-title">MCPTRADE<br><span class="hl">DEVELOPER REFERENCE</span></h1>
+        <p class="doc-lead">Complete technical reference for the MCPTrade intelligence platform — MCP protocol integration, data pipeline architecture, skill library API, and database schema.</p>
+
+        <div class="eyebrow" style="margin-top:32px;">[ OVERVIEW ]</div>
+        <p class="doc-p">MCPTrade is a Next.js 16 application that uses Claude AI connected to TradingView Desktop via the Model Context Protocol (MCP) to perform automated technical analysis on the top 100 cryptocurrencies. Analysis runs offline via a Python script and results are stored in Supabase. The frontend is a read-only SSR dashboard that revalidates every hour.</p>
+
+        <div class="info-grid">
+          <div class="info-cell"><div class="info-label">Runtime</div><div class="info-value">Next.js 16 / Turbopack</div></div>
+          <div class="info-cell"><div class="info-label">AI Model</div><div class="info-value">Claude Sonnet 4.5</div></div>
+          <div class="info-cell"><div class="info-label">Database</div><div class="info-value">Supabase (Postgres)</div></div>
+          <div class="info-cell"><div class="info-label">MCP Server</div><div class="info-value">tradingview-mcp</div></div>
+          <div class="info-cell"><div class="info-label">Data Source</div><div class="info-value">CoinGecko API v3</div></div>
+          <div class="info-cell"><div class="info-label">Revalidation</div><div class="info-value">ISR · 3600s</div></div>
+        </div>
+      </section>
+
+      <section class="doc-section" id="architecture">
+        <div class="eyebrow">[ ARCHITECTURE ]</div>
+        <p class="doc-p">The system separates data generation from data presentation. No analysis happens at request time. The Python script runs as a one-shot batch job and writes results to Supabase. The Next.js frontend reads from Supabase at build time and caches pages with ISR.</p>
+
+        <div class="term-box">
+<span class="mut">●</span> <span class="lbl">GENERATION LAYER</span> <span class="mut">— offline · run manually or via cron</span>
+
+<span class="fn">generate_analysis.py</span>          <span class="fn">CoinGecko API</span>          <span class="fn">Anthropic API</span>
+<span class="mut">Entry point</span>                  <span class="mut">OHLCV · Top 100</span>          <span class="mut">Claude Sonnet · signal</span>
+
+1. <span class="kw">fetch_top100_coingecko</span>() <span class="arrow">→</span> coin list (id, name, price)
+2. <span class="kw">fetch_ohlcv_coingecko</span>() <span class="arrow">→</span> 365-day OHLCV per coin
+3. <span class="kw">detect_support_resistance</span>() + <span class="kw">calc_rsi</span>() / <span class="kw">calc_macd</span>() / <span class="kw">calc_ema</span>()
+4. <span class="kw">claude.messages.create</span>() <span class="arrow">→</span> { signal, score, narasi }
+5. <span class="kw">cache_to_supabase</span>() <span class="arrow">→</span> upsert coin_analysis
+6. [ optional ] <span class="kw">mcp_connect_tradingview</span>() <span class="arrow">→</span> <span class="kw">screenshot_chart</span>() <span class="arrow">→</span> Claude vision
+
+              <span class="mut">│</span>
+      <span class="mut">Supabase Postgres · upsert coin_analysis</span>
+              <span class="mut">│</span>
+
+<span class="mut">●</span> <span class="lbl">PRESENTATION LAYER</span> <span class="mut">— Next.js 16 · Vercel · ISR revalidate=3600</span>
+
+<span class="fn">/</span>                    <span class="fn">/[coinId]</span>              <span class="fn">/skills</span>            <span class="fn">/skills/[id]</span>          <span class="fn">/docs</span>
+<span class="mut">Dashboard</span>            <span class="mut">Coin Detail</span>            <span class="mut">Skills</span>              <span class="mut">Skill Detail</span>           <span class="mut">Docs</span>
+<span class="mut">SSR · CoinTable</span>      <span class="mut">Chart · Terminal · S/R</span>  <span class="mut">58 SkillCards</span>       <span class="mut">Code · About · Related</span>  <span class="mut">Static reference</span>
+        </div>
+      </section>
+
+      <section class="doc-section" id="mcp-protocol">
+        <div class="eyebrow">[ MCP PROTOCOL ]</div>
+        <h2 class="doc-h2">Available MCP Tools</h2>
+        <p class="doc-p">The Model Context Protocol connects Claude to external tool servers via a standardized JSON-RPC transport. MCPTrade uses the <code class="inline">tradingview-mcp</code> server which exposes TradingView Desktop as a set of callable tools.</p>
+
+        <table class="doc-table">
+          <thead><tr><th>Tool Name</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td class="tool-name">connect</td><td>Establish WebSocket connection to TradingView MCP server</td></tr>
+            <tr><td class="tool-name">set_symbol</td><td>Navigate chart to a specific symbol and timeframe</td></tr>
+            <tr><td class="tool-name">get_chart_data</td><td>Read OHLCV bar data from the active chart</td></tr>
+            <tr><td class="tool-name">draw_line</td><td>Draw a horizontal line at a specified price level</td></tr>
+            <tr><td class="tool-name">add_study</td><td>Add a built-in TradingView indicator to the chart</td></tr>
+            <tr><td class="tool-name">screenshot</td><td>Capture chart as PNG, returned as base64 bytes</td></tr>
+            <tr><td class="tool-name">create_alert</td><td>Create a price alert with specified condition and notification methods</td></tr>
+            <tr><td class="tool-name">get_watchlist</td><td>Return all symbols in the active TradingView watchlist</td></tr>
+            <tr><td class="tool-name">set_timeframe</td><td>Change the active chart timeframe</td></tr>
+          </tbody>
+        </table>
+
+        <div class="term-box"><span class="mut"># MCP connection pattern</span>
+
+<span class="kw">import</span> anthropic_mcp <span class="kw">as</span> mcp
+
+<span class="mut"># 1. Connect once per session</span>
+client = mcp.MCPClient(server=<span class="str">"tradingview-mcp"</span>, timeout=<span class="num">30</span>)
+conn = client.connect()
+<span class="kw">assert</span> conn.status == <span class="str">"connected"</span>
+
+<span class="mut"># 2. Navigate and read</span>
+client.call(<span class="str">"set_symbol"</span>, {<span class="str">"symbol"</span>: <span class="str">"BINANCE:BTCUSDT"</span>, <span class="str">"timeframe"</span>: <span class="str">"1D"</span>})
+client.wait_for(<span class="str">"chart_loaded"</span>)
+data = client.call(<span class="str">"get_chart_data"</span>, {<span class="str">"bars"</span>: <span class="num">365</span>, <span class="str">"timeframe"</span>: <span class="str">"1D"</span>})
+
+<span class="mut"># 3. Analyze and draw</span>
+levels = detect_sr(data[<span class="str">"high"</span>], data[<span class="str">"low"</span>])
+<span class="kw">for</span> price <span class="kw">in</span> levels[<span class="str">"support"</span>]:
+    client.call(<span class="str">"draw_line"</span>, {<span class="str">"price"</span>: price, <span class="str">"color"</span>: <span class="str">"#22C55E"</span>, <span class="str">"style"</span>: <span class="str">"solid"</span>})</div>
+      </section>
+
+      <section class="doc-section" id="data-flow">
+        <div class="eyebrow">[ DATA FLOW ]</div>
+        <p class="doc-p">Analysis is a three-phase pipeline: data ingestion from CoinGecko, computation via Python indicator functions and Claude API, then persistence to Supabase. The frontend never calls CoinGecko or Anthropic — it reads exclusively from Supabase.</p>
+
+        <div class="term-box"><span class="mut">generate_analysis.py</span>            <span class="mut">CoinGecko API</span>            <span class="mut">Supabase</span>
+
+<span class="mut">│</span>— <span class="kw">fetch_top100</span>(coin) <span class="arrow">─────────────</span>→ <span class="mut">│</span>
+<span class="mut">│</span>← [ {coin_id, name, price} ] <span class="arrow">──────</span> <span class="mut">│</span>
+<span class="mut">│</span>
+<span class="mut">│</span>— <span class="kw">fetch_ohlcv</span>(coin_id) <span class="arrow">────────────</span>→ <span class="mut">│</span>
+<span class="mut">│</span>← [ [t, O, H, L, C] × 365 ] <span class="arrow">───────</span> <span class="mut">│</span>
+<span class="mut">│</span>
+<span class="mut">│</span>— <span class="kw">calc_rsi</span> / <span class="kw">calc_macd</span> / <span class="kw">detect_sr</span>  <span class="mut">(local)</span>
+<span class="mut">│</span>— <span class="kw">claude.messages.create</span>()          <span class="mut">(Anthropic API)</span>
+<span class="mut">│</span>
+<span class="mut">│</span>— <span class="kw">sb.table</span>(<span class="str">"coin_analysis"</span>).upsert(result) <span class="arrow">───→</span> <span class="mut">│</span>
+<span class="mut">│</span>← { status: <span class="str">"ok"</span> } <span class="arrow">───────────────────</span> <span class="mut">│</span>
+
+<span class="mut">Next.js DashboardPage</span> — <span class="kw">getAllCoins</span>() <span class="arrow">──────────────────────→</span> <span class="mut">│</span>
+                     <span class="arrow">← CoinAnalysis[]</span> <span class="arrow">────────────────────</span> <span class="mut">│</span></div>
+      </section>
+
+      <section class="doc-section" id="quick-start">
+        <div class="eyebrow">[ QUICK START ]</div>
+        <div class="term-box"># 1. Clone and install
+<span class="kw">git</span> clone &lt;repo-url&gt; && cd mcptrade
+pnpm install
+
+<span class="mut"># 2. Set environment variables (see Environment section)</span>
+cp .env.example .env.local
+
+<span class="mut"># 3. Populate the database (one-time or refresh)</span>
+cd scripts
+python generate_analysis.py
+
+<span class="mut"># 4. Start the development server</span>
+cd ..
+pnpm dev</div>
+
+        <h2 class="doc-h2" style="margin-top:28px;">Prerequisites</h2>
+        <table class="doc-table">
+          <thead><tr><th>Requirement</th><th>Version</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td>Node.js</td><td><code>≥ 20.x</code></td><td>Required for Next.js 16 and pnpm</td></tr>
+            <tr><td>Python</td><td><code>≥ 3.10</code></td><td>Required for generate_analysis.py</td></tr>
+            <tr><td>TradingView Desktop</td><td>Latest</td><td>Required for MCP chart tools (optional for data-only mode)</td></tr>
+            <tr><td>pnpm</td><td><code>≥ 9.x</code></td><td>Package manager (npm/yarn also work)</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="doc-section" id="environment">
+        <div class="eyebrow">[ ENVIRONMENT ]</div>
+        <table class="doc-table">
+          <thead><tr><th>Variable</th><th>Scope</th><th>Purpose</th></tr></thead>
+          <tbody>
+            <tr><td><code>NEXT_PUBLIC_SUPABASE_URL</code></td><td><span class="env-scope scope-client">CLIENT</span></td><td>Supabase project URL — exposed to browser</td></tr>
+            <tr><td><code>NEXT_PUBLIC_SUPABASE_ANON_KEY</code></td><td><span class="env-scope scope-client">CLIENT</span></td><td>Supabase anon key — read-only access, safe to expose</td></tr>
+            <tr><td><code>ANTHROPIC_API_KEY</code></td><td><span class="env-scope scope-server">SERVER</span></td><td>Anthropic API key — used by generate_analysis.py only</td></tr>
+            <tr><td><code>SUPABASE_SERVICE_KEY</code></td><td><span class="env-scope scope-server">SERVER</span></td><td>Supabase service role key — used for upsert operations in script</td></tr>
+          </tbody>
+        </table>
+
+        <div class="term-box">NEXT_PUBLIC_SUPABASE_URL=https://your-project.supabase.co
+NEXT_PUBLIC_SUPABASE_ANON_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...
+ANTHROPIC_API_KEY=sk-ant-...           <span class="mut"># script only</span>
+SUPABASE_SERVICE_KEY=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...  <span class="mut"># script only</span></div>
+      </section>
+
+      <section class="doc-section" id="skills-reference">
+        <div class="eyebrow">[ SKILLS BREAKDOWN ]</div>
+        <p class="doc-p">58 Python functions organized into 7 categories. Each skill is self-contained with no cross-skill dependencies unless explicitly noted. All functions assume Python 3.10+.</p>
+
+        <table class="doc-table skill-cat-table">
+          <thead><tr><th>Category</th><th>Count</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td style="color:var(--orange);">MCP Integration</td><td>10</td><td>Connect, control, and read data from TradingView Desktop via the MCP protocol</td></tr>
+            <tr><td style="color:var(--blue);">Chart Analysis</td><td>10</td><td>Detect S/R, trends, patterns, divergence and breakouts from OHLCV arrays</td></tr>
+            <tr><td style="color:var(--purple);">Market Scanner</td><td>8</td><td>Scan coin lists for signal setups — buy signals, crosses, extremes</td></tr>
+            <tr><td style="color:var(--green);">Indicators</td><td>8</td><td>Pure Python RSI, EMA, MACD, ATR, VWAP, Ichimoku — no NumPy/pandas required</td></tr>
+            <tr><td style="color:#0d9488;">Pine Script</td><td>7</td><td>Ready-to-paste Pine Script v5 indicators and strategies for TradingView</td></tr>
+            <tr><td style="color:#0891b2;">Data Pipeline</td><td>7</td><td>Fetch, normalize, batch, schedule and export coin-analysis data</td></tr>
+            <tr><td style="color:#db2777;">Claude AI</td><td>8</td><td>Prompt templates for narrative generation, scoring, and visual chart analysis</td></tr>
+          </tbody>
+        </table>
+
+        <a class="btn" href="skills.html">VIEW ALL 58 SKILLS →</a>
+      </section>
+
+      <section class="doc-section" id="api-reference">
+        <div class="eyebrow">[ API REFERENCE ]</div>
+
+        <h2 class="doc-h2">GET /api/debug</h2>
+        <p class="doc-p">Returns the raw Supabase connection status and a sample of the first coin record. Useful for verifying that environment variables are correctly configured after deployment.</p>
+
+        <h2 class="doc-h2" style="margin-top:32px;">lib/supabase.ts → getAllCoins()</h2>
+        <table class="doc-table">
+          <tbody>
+            <tr><td style="width:120px;font-family:var(--mono);color:var(--text3);">return</td><td><code>CoinAnalysis[]</code> — All rows from coin_analysis ordered by market_cap_rank ascending</td></tr>
+            <tr><td style="font-family:var(--mono);color:var(--text3);">revalidate</td><td>3600s — pages using this function cache for 1 hour, then revalidate on next request</td></tr>
+            <tr><td style="font-family:var(--mono);color:var(--text3);">throws</td><td>never — Internally catches all errors, empty array returned when Supabase is unavailable</td></tr>
+          </tbody>
+        </table>
+
+        <h2 class="doc-h2" style="margin-top:32px;">lib/supabase.ts → getCoin(coinId)</h2>
+        <table class="doc-table">
+          <tbody>
+            <tr><td style="width:120px;font-family:var(--mono);color:var(--text3);">coinId</td><td><code>string</code> — CoinGecko coin ID (e.g. "bitcoin", "ethereum")</td></tr>
+            <tr><td style="font-family:var(--mono);color:var(--text3);">return</td><td><code>CoinAnalysis | null</code> — Single coin record or null if not found</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="doc-section" id="database-schema">
+        <div class="eyebrow">[ DATABASE SCHEMA ]</div>
+        <h2 class="doc-h2">Table: coin_analysis</h2>
+        <table class="doc-table">
+          <thead><tr><th>Column</th><th>Type</th><th>PK</th><th>Description</th></tr></thead>
+          <tbody>
+            <tr><td><code>coin_id</code></td><td>text</td><td>✓</td><td>CoinGecko ID — primary key, conflict target for upsert</td></tr>
+            <tr><td><code>name</code></td><td>text</td><td></td><td>Display name (e.g. "Bitcoin")</td></tr>
+            <tr><td><code>symbol</code></td><td>text</td><td></td><td>Ticker symbol (e.g. "btc")</td></tr>
+            <tr><td><code>tv_symbol</code></td><td>text</td><td></td><td>TradingView symbol string (e.g. "BINANCE:BTCUSDT")</td></tr>
+            <tr><td><code>current_price</code></td><td>float8</td><td></td><td>Last known USD price from CoinGecko</td></tr>
+            <tr><td><code>price_change_24h</code></td><td>float8</td><td></td><td>24-hour price change as a percentage</td></tr>
+            <tr><td><code>market_cap_rank</code></td><td>int4</td><td></td><td>Market cap ranking at time of analysis</td></tr>
+            <tr><td><code>image_url</code></td><td>text</td><td></td><td>CoinGecko CDN URL for the coin logo PNG</td></tr>
+            <tr><td><code>signal</code></td><td>text</td><td></td><td>Claude's signal output: "buy" / "sell" / "neutral"</td></tr>
+            <tr><td><code>score</code></td><td>int4</td><td></td><td>Signal quality score 0-100 (rate_signal_quality)</td></tr>
+            <tr><td><code>trend</code></td><td>text</td><td></td><td>Trend classification: "Bullish" / "Bearish" / "Sideways"</td></tr>
+            <tr><td><code>rsi</code></td><td>float8</td><td></td><td>14-period RSI at time of analysis</td></tr>
+            <tr><td><code>macd</code></td><td>text</td><td></td><td>MACD state string (e.g. "Positive" / "Negative")</td></tr>
+            <tr><td><code>ema_crosses</code></td><td>text</td><td></td><td>EMA cross state (e.g. "Golden Cross" / "Death Cross")</td></tr>
+            <tr><td><code>support</code></td><td>jsonb</td><td></td><td>Array of {price, strength} support level objects</td></tr>
+            <tr><td><code>resistance</code></td><td>jsonb</td><td></td><td>Array of {price, strength} resistance level objects</td></tr>
+            <tr><td><code>narasi</code></td><td>text</td><td></td><td>Claude-generated 2-sentence market narrative</td></tr>
+            <tr><td><code>analyzed_at</code></td><td>timestamptz</td><td></td><td>UTC timestamp when the analysis was generated</td></tr>
+          </tbody>
+        </table>
+
+        <div class="term-box"><span class="kw">create table</span> coin_analysis (
+  coin_id         text <span class="kw">primary key</span>,
+  name            text,
+  symbol          text,
+  tv_symbol       text,
+  current_price   float8,
+  price_change_24h float8,
+  market_cap_rank int4,
+  image_url       text,
+  signal          text,
+  score           int4,
+  trend           text,
+  rsi             float8,
+  macd            text,
+  ema_crosses     text,
+  support         jsonb,
+  resistance      jsonb,
+  narasi          text,
+  analyzed_at     timestamptz <span class="kw">default</span> now()
+);</div>
+      </section>
+
+    </main>
+  </div>
+
+  <footer>
+    <span>data: coingecko · analysis: claude mcp · chart: tradingview · revalidates every 1h</span>
+    <span>developer reference · v1.0</span>
+  </footer>
+
+<script>
+  const events = [
+    { fn:'mcp.connect', text:'("tradingview") → [connected] daily TF' },
+    { fn:'mcp.draw_levels', text:'(resistance=98000) → [drawn] on chart' },
+    { fn:'claude.scan_watchlist', text:'(coins=100) → [42] buy signals found' },
+    { fn:'claude.detect_sr', text:'("SOLUSDT") → [S: $165] [R: $185]' },
+    { fn:'claude.analyze', text:'("ETHUSDT") → [signal: strong buy]' },
+  ];
+  const track = document.getElementById('tickerTrack');
+  let th='';
+  for(let r=0;r<2;r++){events.forEach(e=>{th+='<span><span class="fn">'+e.fn+'</span> '+e.text+'</span>';});}
+  track.innerHTML = th;
+
+  // Scrollspy for sidebar active link
+  const links = Array.from(document.querySelectorAll('.sidebar-nav a'));
+  const sections = links.map(l => document.querySelector(l.getAttribute('href')));
+  function onScroll(){
+    let idx = 0;
+    const y = window.scrollY + 130;
+    sections.forEach((s,i)=>{ if(s && s.offsetTop <= y) idx = i; });
+    links.forEach(l=>l.classList.remove('active'));
+    links[idx].classList.add('active');
+  }
+  window.addEventListener('scroll', onScroll);
+  onScroll();
+</script>
+</body>
+</html>

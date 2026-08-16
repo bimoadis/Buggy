@@ -1,0 +1,51 @@
+# Quick Start
+
+Get buggy running in under 5 minutes.
+
+## What you need
+
+- A Claude account (Free, Pro, or API)
+- Claude Code installed (for live target scanning) — or just claude.ai (for code review)
+
+## Option A — Claude Chat (code review)
+
+1. Download the skill ZIP from [GitHub](https://github.com/elementalsouls/Claude-BugHunter)
+2. Go to [claude.ai/customize/skills](https://claude.ai/customize/skills)
+3. Upload the ZIP
+4. Open a new conversation and paste your code or HTTP request
+5. Type `/hunt-sqli` (or any other skill command) to activate
+
+Claude will load the skill context and begin analyzing your input.
+
+## Option B — Claude Code (live target scanning)
+
+```bash
+# 1. Install Claude Code
+npm install -g @anthropic-ai/claude-code
+
+# 2. Clone the skill bundle
+git clone https://github.com/elementalsouls/Claude-BugHunter buggy-skills
+cd buggy-skills
+
+# 3. Open Claude Code in the skills directory
+claude
+
+# 4. Run a hunt
+/hunt https://target.com
+```
+
+## First hunt
+
+Once installed, type:
+
+```
+/hunt https://target.com
+```
+
+Claude will run recon, identify the attack surface, and begin testing based on the loaded skills.
+
+## Next steps
+
+- [Install guide](/docs/install) — detailed setup for both modes
+- [Chat vs Code](/docs/chat-vs-code) — when to use which
+- [7-Question Gate](/docs/7-question-gate) — quality gate before submitting
