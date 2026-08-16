@@ -1,169 +1,210 @@
 <div align="center">
 
-# buggy
+<img src="web/public/logo.png" alt="Buggy Mascot Logo" width="160" style="border-radius: 16px;" />
 
-<img src="docs/icon.png" alt="buggy logo" width="142" />
+# ⚡ BUGGY
 
-**51 specialized Claude skills for bug hunting, web security, and external red-team workflows.**
+**51 Production-Ready Claude Skills & Offensive Security Intelligence Toolkit**
 
-![version](https://img.shields.io/badge/version-1.0.0-black?style=flat-square)
-![license](https://img.shields.io/badge/license-MIT-green?style=flat-square)
-![skills](https://img.shields.io/badge/skills-51-0031FF?style=flat-square)
-![commands](https://img.shields.io/badge/commands-15-8259EF?style=flat-square)
-![patterns](https://img.shields.io/badge/H1_patterns-574%2B-16a34a?style=flat-square)
+[![Version](https://img.shields.io/badge/version-1.0.0-0660F1?style=for-the-badge&logo=codeforces&logoColor=white)](https://github.com/bimoadis/Buggy)
+[![Skills](https://img.shields.io/badge/skills-51_Specialized-0660F1?style=for-the-badge)](https://github.com/bimoadis/Buggy/tree/main/skills)
+[![Disclosures](https://img.shields.io/badge/disclosures-574+_H1_Patterns-16a34a?style=for-the-badge)](https://github.com/bimoadis/Buggy)
+[![Quality Gate](https://img.shields.io/badge/Quality_Gate-7--Question_Filter-dc2626?style=for-the-badge)](https://github.com/bimoadis/Buggy/blob/main/docs/7-question-gate.mdx)
+[![License](https://img.shields.io/badge/license-MIT-0a0a0a?style=for-the-badge)](LICENSE)
+
+[**Explore Web App →**](https://buggy-wheat-seven.vercel.app/) • [**Documentation**](https://buggy-wheat-seven.vercel.app/docs) • [**Browse 51 Skills**](https://buggy-wheat-seven.vercel.app/skills) • [**Report Issues**](https://github.com/bimoadis/Buggy/issues)
 
 </div>
 
-buggy is a Claude skill bundle adapted from real bug bounty disclosures. Each skill loads specialized context — vulnerability patterns, PoC templates, and report structures — derived from hundreds of public HackerOne and Bugcrowd reports. Skills activate by context in both Claude Chat (static analysis) and Claude Code (live target scanning). A built-in 7-Question Gate runs before every report to keep your N/A ratio clean.
+---
+
+## 🎯 Overview
+
+**Buggy** is an advanced offensive security and bug hunting context library designed for **Claude Code (CLI)** and **Claude Chat (Web)**. 
+
+Every skill is a standalone, self-contained `SKILL.md` context bundle distilled directly from **574+ disclosed HackerOne, Bugcrowd, and Intigriti reports**. Skills contain verified real-world bypass patterns, precision exploitation techniques, and automated report generators equipped with a mandatory **7-Question Quality Gate** to eliminate speculative submissions.
 
 ---
 
-## What it does
+## ⚡ Key Capabilities
 
-- **Hunt live targets** — Run `/hunt target.com` in Claude Code and get a streamed findings report with PoC steps
-- **Review code statically** — Upload the skill ZIP to claude.ai, paste any code or HTTP request, and receive a structured findings artifact
-- **Auto-load by context** — Skills detect their own trigger signals (JWT in input → auth skill loads, APK path → apk-redteam-pipeline loads)
-- **Gate before submit** — Every finding runs the 7-Question Gate. One wrong answer kills the report
-- **574+ H1 patterns** — Built from disclosed reports across SQLi, XSS, OAuth, IDOR, SSRF, RCE, and 15 other classes
-
----
-
-## Key features
-
-| Feature | Description |
-|---|---|
-| 51 skills | 8 domains: web-hunting, auth, api-infra, enterprise, red-team, recon, reporting, specialized |
-| 15 slash commands | `/hunt`, `/triage`, `/report`, `/recon`, `/chain`, and 10 more |
-| 7-Question Gate | Built into triage-validation — kills speculative reports before they reach a triager |
-| Context auto-load | Skill triggers on URL, JWT, APK path, contract address, or domain signal |
-| Chat + Code | Every skill documents which Claude environment supports it |
-| Report templates | H1, Bugcrowd, Intigriti, and Immunefi formats with impact-first structure |
+- 🔍 **Live Target Hunting (Claude Code)** — Run `/hunt https://target.com` for full-pipeline subdomain discovery, port probing, and vulnerability mapping with real-time terminal streaming.
+- 📋 **Static Code Review (Claude Chat)** — Paste source code snippets, HTTP request/response logs, or JWT tokens to receive structured vulnerability analysis and remediation diffs.
+- 🛡️ **7-Question Quality Gate** — Built-in quality filter that rigorously verifies scope, exploitability, impact, and repeatability before generating reports. If one criterion fails, the finding is discarded.
+- 🧠 **Context-Aware Auto-Loading** — Skills trigger automatically upon encountering matching input signals (e.g., token parameters load auth skills, `.apk` files trigger mobile pipeline).
+- 📝 **Standardized Triage Reports** — One-click markdown generation formatted specifically for HackerOne, Bugcrowd, and Intigriti triage teams with CVSS 3.1 scoring.
 
 ---
 
-## Skill domains
+## 🌐 8 Attack Domains (51 Skills)
 
 ```mermaid
 graph LR
-    buggy --> WH[Web Hunting\n22 skills]
-    buggy --> AI[Auth & Identity\n5 skills]
-    buggy --> AP[API & Infra\n4 skills]
-    buggy --> EN[Enterprise\n6 skills]
-    buggy --> RT[Red Team\n4 skills]
-    buggy --> RE[Recon & OSINT\n3 skills]
-    buggy --> RP[Reporting\n5 skills]
-    buggy --> SP[Specialized\n2 skills]
+    Buggy["⚡ BUGGY"] --> WH["Web Hunting (22 Skills)"]
+    Buggy --> AI["Auth & Identity (5 Skills)"]
+    Buggy --> AP["API & Infrastructure (4 Skills)"]
+    Buggy --> EN["Enterprise & Cloud (6 Skills)"]
+    Buggy --> RT["Red Team Ops (4 Skills)"]
+    Buggy --> RE["Recon & OSINT (3 Skills)"]
+    Buggy --> RP["Reporting & Triage (5 Skills)"]
+    Buggy --> SP["Specialized & Web3 (2 Skills)"]
+
+    style Buggy fill:#0660F1,stroke:#0660F1,color:#fff
+    style WH fill:#eef5ff,stroke:#0660F1,color:#0a0a0a
+    style AI fill:#eff6ff,stroke:#2563eb,color:#0a0a0a
+    style AP fill:#f5f3ff,stroke:#7c3aed,color:#0a0a0a
+    style EN fill:#fdf2f8,stroke:#db2777,color:#0a0a0a
+    style RT fill:#fef2f2,stroke:#dc2626,color:#0a0a0a
+    style RE fill:#ecfeff,stroke:#0891b2,color:#0a0a0a
+    style RP fill:#f0fdf4,stroke:#16a34a,color:#0a0a0a
+    style SP fill:#f0fdfa,stroke:#0d9488,color:#0a0a0a
 ```
+
+| Domain | Skills | Focus Areas |
+|---|:---:|---|
+| **Web Hunting** | 22 | SQLi, XSS, SSRF, IDOR, RCE, XXE, SSTI, Race Conditions, Cache Poisoning, HTTP Smuggling |
+| **Auth & Identity** | 5 | OAuth 2.0 / OIDC, SAML, Account Takeover (ATO), MFA Bypass, Broken Object Level Auth |
+| **API & Infra** | 4 | GraphQL Introspection, Cloud S3/Blob Misconfigurations, REST API Auth, NTLM Info Leaks |
+| **Enterprise** | 6 | Microsoft 365 / Entra ID, Okta, VMware vCenter, Cloud IAM Privilege Escalation, SharePoint |
+| **Red Team** | 4 | Android APK Decompilation & Hardcoded Secrets, Supply Chain Recon, EDR/IR Evasion |
+| **Recon & OSINT** | 3 | Automated Subdomain Enumeration, Identity Fabric, Dork Corpora, Sector Profiling |
+| **Reporting** | 5 | 7-Question Quality Gate, HackerOne/Bugcrowd Templates, CVSS 3.1 Calculation, Evidence Hygiene |
+| **Specialized** | 2 | Smart Contract Audit (Solidity), Web3 Token Security & Meme-coin Forensics |
 
 ---
 
-## Architecture
+## 🚦 The 7-Question Quality Gate
+
+Every finding must clear all 7 questions before a report artifact is generated:
 
 ```mermaid
 graph TD
-    Input["Target / Code / Request"] --> Trigger["Context Trigger Detection"]
-    Trigger --> Skill["Skill SKILL.md loaded"]
-    Hunt --> Gate["7-Question Gate\ntriage-validation"]
-    Gate -- Pass --> Report["Report Artifact\nH1 / Bugcrowd / Intigriti"]
-    Gate -- Fail --> Kill["Kill Finding\nMove On"]
+    Finding["Vulnerability Signal Detected"] --> Q1{"1. In Scope?"}
+    Q1 -- No --> Kill["❌ DISCARD (Out of Scope)"]
+    Q1 -- Yes --> Q2{"2. Proven Exploitable?"}
+    Q2 -- No --> Kill
+    Q2 -- Yes --> Q3{"3. Demonstrable Impact?"}
+    Q3 -- No --> Kill
+    Q3 -- Yes --> Q4{"4. Reproduced Twice?"}
+    Q4 -- No --> Kill
+    Q4 -- Yes --> Q5{"5. Clean PoC Payload?"}
+    Q5 -- No --> Refine["✏️ Refine PoC"] --> Q5
+    Q5 -- Yes --> Q6{"6. Checked Duplicate?"}
+    Q6 -- No --> Kill
+    Q6 -- Yes --> Q7{"7. Submit-Ready Markdown?"}
+    Q7 -- Yes --> Ship["✅ READY TO SHIP (Triage Grade Report)"]
+
+    style Finding fill:#0a0a0a,color:#fff
+    style Ship fill:#16a34a,color:#fff
+    style Kill fill:#dc2626,color:#fff
+    style Refine fill:#0660F1,color:#fff
 ```
 
 ---
 
-## Quick start
+## 🚀 Quick Start Guide
+
+### Option 1: Live Target Hunting with Claude Code (CLI)
 
 ```bash
-# Claude Code (live target scanning)
-git clone https://github.com/elementalsouls/Claude-BugHunter
-cd Claude-BugHunter
+# 1. Clone repository
+git clone https://github.com/bimoadis/Buggy.git
+cd Buggy
+
+# 2. Launch Claude Code in project root
 claude
 
-# Start a hunt
+# 3. Execute hunt slash command
 /hunt https://target.com
 
-# Or target a specific class
-/hunt-sqli https://target.com/search?q=test
+# 4. Or target specific vulnerability classes
+/hunt-sqli https://target.com/api/v1/search?q=1
 ```
 
-For Claude Chat (static code review):
-1. Download the skill ZIP from [Releases](https://github.com/elementalsouls/Claude-BugHunter/releases)
-2. Upload to [claude.ai/customize/skills](https://claude.ai/customize/skills)
-3. Paste your code or HTTP request and type the skill command
+### Option 2: Static Audit with Claude Chat (Web)
+
+1. Download or package the [`skills/`](./skills) folder into a `.zip`.
+2. Go to [claude.ai/customize/skills](https://claude.ai/customize/skills) and upload the skill archive.
+3. Paste code, configurations, or HTTP logs into chat and invoke the command (e.g. `/hunt-oauth`).
+
+### Option 3: Run the Web Showcase Locally
+
+```bash
+# Navigate to web directory
+cd web
+
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Open in browser: http://localhost:3000
+```
 
 ---
 
-## Project structure
+## 💻 Available Slash Commands
 
-```
-buggy/
-├── skills/
-│   ├── web-hunting/      ← 22 skills: SQLi, XSS, SSRF, IDOR, RCE, and more
-│   ├── auth-identity/    ← 5 skills: OAuth, ATO, auth bypass, SAML, MFA
-│   ├── api-infra/        ← 4 skills: API misconfig, cloud misconfig, GraphQL, NTLM
-│   ├── enterprise/       ← 6 skills: M365, Okta, vCenter, IAM, VPN, SharePoint
-│   ├── red-team/         ← 4 skills: APK pipeline, supply chain, IR detection, mindset
-│   ├── recon-osint/      ← 3 skills: OSINT methodology, offensive OSINT, subdomain
-│   ├── reporting/        ← 5 skills: triage gate, report writing, evidence hygiene
-│   └── specialized/      ← 2 skills: web3 audit, meme-coin audit
+| Command | Syntax | Description |
+|---|---|---|
+| `/hunt` | `/hunt [target]` | Full automated recon + multi-vector vulnerability scanning |
+| `/hunt-sqli` | `/hunt-sqli [url]` | Deep SQL injection testing (Time-based, Error-based, Boolean Blind) |
+| `/hunt-xss` | `/hunt-xss [url]` | Contextual XSS auditing (DOM, Reflected, Stored, Mutation) |
+| `/hunt-oauth` | `/hunt-oauth [url]` | OAuth 2.0 redirect validation, token leak, and state bypass testing |
+| `/hunt-ssrf` | `/hunt-ssrf [url]` | Server-Side Request Forgery & Cloud Metadata endpoint auditing |
+| `/hunt-idor` | `/hunt-idor [url]` | Insecure Direct Object Reference & Broken Access Control validation |
+| `/recon` | `/recon [domain]` | 5-stage recon pipeline (DNS, Subdomains, Tech Stack, Probes) |
+| `/triage` | `/triage` | Execute the 7-Question Gate filter on current findings |
+| `/report` | `/report` | Generate structured markdown report with CVSS 3.1 and PoC |
+| `/chain` | `/chain` | Correlate multi-step vulnerabilities into a critical exploit chain |
+
+---
+
+## 📂 Repository Structure
+
+```text
+Buggy/
+├── skills/                  ← 51 Production SKILL.md Context Bundles
+│   ├── web-hunting/         ← 22 Web Application Vulnerability Skills
+│   ├── auth-identity/       ← 5 Authentication & Identity Skills
+│   ├── api-infra/           ← 4 API, Cloud & Network Misconfig Skills
+│   ├── enterprise/          ← 6 Enterprise Architecture (M365, Okta, vCenter) Skills
+│   ├── red-team/            ← 4 Red Team Tactics & Mobile Security Skills
+│   ├── recon-osint/         ← 3 OSINT, Threat Intelligence & Surface Mapping
+│   ├── reporting/           ← 5 Quality Gates, Triage Validation & Report Templates
+│   └── specialized/         ← 2 Web3 & Smart Contract Security Skills
 │
-├── commands/             ← 15 slash command definitions
-│   ├── hunt.md           ← /hunt — primary live hunt command
-│   ├── triage.md         ← /triage — 7-Question Gate runner
-│   ├── report.md         ← /report — report generator
-│   ├── recon.md          ← /recon — recon pipeline
+├── commands/                ← 15 Automated Slash Command Definitions
+│   ├── hunt.md              ← Primary Hunting Pipeline
+│   ├── triage.md            ← 7-Question Quality Gate Engine
+│   ├── report.md            ← Triage-Ready Report Generator
 │   └── ...
 │
-├── docs/                 ← MDX documentation
-│   ├── quick-start.mdx
-│   ├── install.mdx
-│   ├── chat-vs-code.mdx
-│   └── 7-question-gate.mdx
+├── web/                     ← Next.js 14 Web Application Showcase
+│   ├── app/                 ← App Router Pages (Home, Skills, Docs)
+│   ├── components/          ← Technical Brutalist Components & AI Modal
+│   ├── content/             ← Skills & Domain Catalog Data
+│   └── public/              ← Brand Logos & Mascot Assets
 │
-├── web/                  ← Next.js 14 showcase site
-│   ├── app/              ← App Router pages
-│   ├── components/       ← UI, layout, sections
-│   ├── content/          ← domains.ts, skills.ts, demos.ts
-│   └── lib/utils.ts
-│
-└── tests/                ← vitest suite — validates skill structure
-    └── skills.test.ts
+├── docs/                    ← System Architecture & Guide Documentation
+└── tests/                   ← Automated Vitest Structural Validation Suite
 ```
 
 ---
 
-## Slash commands
+## 📜 Ethical & Responsible Usage Policy
 
-| Command | What it does |
-|---|---|
-| `/hunt [target]` | Full recon + vulnerability scan on a live target |
-| `/hunt-sqli [target]` | SQLi-focused hunt using 12 disclosed report patterns |
-| `/hunt-xss [target]` | XSS hunt across DOM, reflected, stored, and mutation variants |
-| `/hunt-oauth [target]` | OAuth 2.0 and OIDC vulnerability hunt |
-| `/triage` | Run the 7-Question Gate on the current finding |
-| `/report` | Generate a report artifact for the current finding |
-| `/recon [target]` | 5-stage recon pipeline: seed → expand → enrich → expose → report |
-| `/chain` | Link recon findings into an exploit chain |
-| `/intel [target]` | OSINT and threat intelligence on a target |
-
-Full command reference in [`commands/`](./commands/)
+> [!IMPORTANT]
+> **Buggy is designed exclusively for authorized security testing, sanctioned bug bounty programs, and educational purposes.**
+> Any unauthorized testing against targets without explicit written permission is strictly prohibited. The maintainers assume no liability for misuse.
 
 ---
 
-## Hard rules
+## 📄 License
 
-1. **Never submit without the Gate.** `/triage` runs 7 questions. One No = kill it.
-2. **Every skill is a single `SKILL.md`.** Do not split skill logic across files.
-3. **Authorized targets only.** These skills are for bug bounty programs and authorized red teams.
-4. **Chat skills are read-only.** No live tool execution in Claude Chat environment.
+Distributed under the **MIT License**. See [`LICENSE`](LICENSE) for more details.
 
----
-
-## Attribution
-
-Skills adapted from [elementalsouls/Claude-BugHunter](https://github.com/elementalsouls/Claude-BugHunter) (MIT License).
-
-buggy is an independent project and is not affiliated with or endorsed by Anthropic.
-
-## License
-
-MIT
+<div align="center">
+  <sub>Engineered for professional bug bounty hunters & red teams.</sub>
+</div>
