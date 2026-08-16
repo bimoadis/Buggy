@@ -10,6 +10,7 @@ import { HunterTicker } from "@/components/home/HunterTicker";
 import { MCFooter } from "@/components/home/MCFooter";
 import { getSkill, getSkillsByDomain, skills } from "@/content/skills";
 import { getDomain, domains } from "@/content/domains";
+import { DomainIcon } from "@/components/DomainIcon";
 import { getDemoId } from "@/content/demos";
 import { DemoVideo } from "@/components/DemoVideo";
 import { AskBuggyModal } from "@/components/AskCbugModal";
@@ -77,8 +78,9 @@ function DomainPage({ domainSlug }: { domainSlug: string }) {
           <div>
             <b>{domainSkills.length}</b> <span className="dim">SKILLS IN DOMAIN</span>
           </div>
-          <div>
-            <b>{domain.icon}</b> <span className="dim">CATEGORY</span>
+          <div style={{ display: "flex", alignItems: "center", gap: 6 }}>
+            <DomainIcon slug={domainSlug} size={15} color="var(--text)" />
+            <span className="dim">CATEGORY</span>
           </div>
           <div>
             <Link href="/skills" style={{ color: "var(--orange)", textDecoration: "underline" }}>

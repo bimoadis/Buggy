@@ -149,8 +149,8 @@ export function MCSplitDocs() {
                   style={{
                     height: 6,
                     borderRadius: 2,
-                    background: isPassed ? "var(--green)" : isCurrent ? "var(--orange)" : "var(--border2)",
-                    boxShadow: isCurrent ? "0 0 6px rgba(6, 96, 241, 0.8)" : "none",
+                    background: isPassed ? "var(--orange)" : isCurrent ? "#60a5fa" : "var(--border2)",
+                    boxShadow: isCurrent ? "0 0 8px rgba(6, 96, 241, 0.9)" : isPassed ? "0 0 4px rgba(6, 96, 241, 0.35)" : "none",
                     transition: "all 0.3s ease",
                   }}
                 />
@@ -159,14 +159,14 @@ export function MCSplitDocs() {
           </div>
 
           {activeStep > 0 ? (
-            <div style={{ fontSize: 11, fontFamily: "var(--font-geist-mono)", color: activeStep === 7 ? "var(--green)" : "var(--text)" }}>
+            <div style={{ fontSize: 11, fontFamily: "var(--font-geist-mono)", color: activeStep === 7 ? "var(--orange)" : "var(--text)" }}>
               <span style={{ color: "var(--orange)", fontWeight: 700, marginRight: 6 }}>
                 [{GATE_STEPS[Math.min(activeStep - 1, 6)].num}]
               </span>
-              <strong>{GATE_STEPS[Math.min(activeStep - 1, 6)].label}</strong> —{" "}
+              <strong style={{ color: "var(--orange)" }}>{GATE_STEPS[Math.min(activeStep - 1, 6)].label}</strong> —{" "}
               <span style={{ color: "var(--text2)" }}>{GATE_STEPS[Math.min(activeStep - 1, 6)].pass}</span>
               {activeStep === 7 && (
-                <div style={{ marginTop: 6, fontSize: 10, color: "var(--green)", fontWeight: 700 }}>
+                <div style={{ marginTop: 6, fontSize: 10, color: "var(--orange)", fontWeight: 700 }}>
                   ✓ ALL 7 QUALITY GATES CLEARED — ARTIFACT READY FOR HACKERONE / BUGCROWD
                 </div>
               )}

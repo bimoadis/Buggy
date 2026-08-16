@@ -1,16 +1,6 @@
 import Link from "next/link";
 import { domains } from "@/content/domains";
-
-const DOMAIN_ICONS: Record<string, string> = {
-  "web-hunting": "⬡",
-  "auth": "◈",
-  "api-infra": "◉",
-  "enterprise": "◆",
-  "red-team": "◇",
-  "recon": "★",
-  "reporting": "⚡",
-  "specialized": "🔒",
-};
+import { DomainIcon } from "@/components/DomainIcon";
 
 export function MCDomainsGrid() {
   return (
@@ -40,7 +30,7 @@ export function MCDomainsGrid() {
           <div key={domain.slug} className="domain-feature-cell">
             <div className="scanline" />
             <div className="domain-icon-box">
-              {DOMAIN_ICONS[domain.slug] || "⬡"}
+              <DomainIcon slug={domain.slug} size={44} color="var(--text)" />
             </div>
             <div style={{ fontSize: 13, fontWeight: 700, marginBottom: 8, fontFamily: "var(--font-geist-mono)" }}>
               {domain.title}

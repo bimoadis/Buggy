@@ -136,22 +136,31 @@ export function MCSkillsTable() {
                       <td style={{ padding: "12px 16px", fontFamily: "var(--font-geist-mono)", fontSize: 11.5, color: "var(--text2)" }}>
                         {skill.domain}
                       </td>
-                      <td style={{ padding: "12px 16px", textAlign: "center" }}>
-                        <span
-                          style={{
-                            fontFamily: "var(--font-geist-mono)",
-                            fontSize: 10,
-                            padding: "2px 7px",
-                            borderRadius: 10,
-                            fontWeight: 600,
-                            background: skill.env === "both" ? "var(--green-bg)" : skill.env === "chat" ? "var(--orange-bg)" : "var(--purple-bg)",
-                            color: skill.env === "both" ? "var(--green)" : skill.env === "chat" ? "var(--orange)" : "var(--purple)",
-                            border: `1px solid ${skill.env === "both" ? "rgba(22,163,74,0.25)" : skill.env === "chat" ? "rgba(6,96,241,0.25)" : "rgba(124,58,237,0.25)"}`,
-                          }}
-                        >
-                          {skill.env}
-                        </span>
-                      </td>
+                        <td style={{ padding: "12px 16px", textAlign: "center" }}>
+                          {(() => {
+                            const isBoth = skill.env === "both";
+                            const isCode = skill.env === "code";
+                            const bg = isBoth ? "var(--orange-bg)" : isCode ? "#f5f3ff" : "#f0fdf4";
+                            const col = isBoth ? "var(--orange)" : isCode ? "#7c3aed" : "#16a34a";
+                            const border = isBoth ? "var(--orange-border)" : isCode ? "rgba(124,58,237,0.25)" : "rgba(22,163,74,0.25)";
+                            return (
+                              <span
+                                style={{
+                                  fontFamily: "var(--font-geist-mono)",
+                                  fontSize: 10,
+                                  padding: "2px 8px",
+                                  borderRadius: 10,
+                                  fontWeight: 600,
+                                  background: bg,
+                                  color: col,
+                                  border: `1px solid ${border}`,
+                                }}
+                              >
+                                {skill.env}
+                              </span>
+                            );
+                          })()}
+                        </td>
                       <td style={{ padding: "12px 16px", textAlign: "right", fontFamily: "var(--font-geist-mono)", fontSize: 11, color: "var(--text3)" }}>
                         {skill.reportCount ? `${skill.reportCount}` : "—"}
                       </td>

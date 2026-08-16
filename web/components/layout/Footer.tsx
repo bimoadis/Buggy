@@ -54,6 +54,7 @@ export function Footer() {
           {[
             { label: "Quick Start", href: "/docs/quick-start" },
             { label: "Install",     href: "/docs/install" },
+            { label: "X / Twitter", href: "https://x.com/buggyskills?s=11", external: true },
             { label: "GitHub",      href: "https://github.com/bimoadis/Buggy", external: true },
           ].map((link) =>
             link.external ? (

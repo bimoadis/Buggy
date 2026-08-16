@@ -33,6 +33,8 @@ export function SmoothScroll() {
     const onWheel = (e: WheelEvent) => {
       /* Pass wheel events through to scrollable child containers (e.g. chat modal) */
       if (e.target instanceof Element && isInsideScrollable(e.target, e.deltaY)) return;
+      /* Allow browser native Ctrl/Cmd + Wheel zoom in and zoom out */
+      if (e.ctrlKey || e.metaKey) return;
 
       e.preventDefault();
       let delta = e.deltaY;

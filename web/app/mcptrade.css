@@ -886,15 +886,23 @@ h1.hero-title .hl {
 }
 
 .domain-icon-box {
-  width: 46px;
-  height: 46px;
+  width: 72px;
+  height: 72px;
   border: 1px solid var(--border);
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 20px;
-  margin-bottom: 16px;
-  color: var(--text2);
+  margin-bottom: 20px;
+  color: var(--text);
+  background: #fafafa;
+  border-radius: 4px;
+  transition: all 0.2s ease;
+}
+
+.domain-feature-cell:hover .domain-icon-box {
+  border-color: rgba(6, 96, 241, 0.45);
+  background: var(--orange-bg);
+  box-shadow: 0 0 16px rgba(6, 96, 241, 0.2);
 }
 
 /* ── Split Docs Section ── */
@@ -1500,9 +1508,9 @@ table.mc-doc-table code {
   border-radius: 12px;
 }
 
-.mc-env-pill.both { background: var(--green-bg); color: var(--green); border: 1px solid rgba(22, 163, 74, 0.25); }
-.mc-env-pill.chat { background: var(--orange-bg); color: var(--orange); border: 1px solid rgba(6, 96, 241, 0.25); }
-.mc-env-pill.code { background: var(--purple-bg); color: var(--purple); border: 1px solid rgba(124, 58, 237, 0.25); }
+.mc-env-pill.both { background: var(--orange-bg); color: var(--orange); border: 1px solid var(--orange-border); }
+.mc-env-pill.code { background: #f5f3ff; color: #7c3aed; border: 1px solid rgba(124, 58, 237, 0.25); }
+.mc-env-pill.chat { background: #f0fdf4; color: #16a34a; border: 1px solid rgba(22, 163, 74, 0.25); }
 
 .mc-skills-grid {
   display: grid;
