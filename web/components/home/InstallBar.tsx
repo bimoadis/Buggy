@@ -3,7 +3,7 @@ import { useState } from "react";
 
 export function InstallBar() {
   const [copied, setCopied] = useState(false);
-  const command = "H78G5BJyidnNmGtunBmmzi4bPbQafwYCC6M2fZ2Ypump";
+  const command = "https://github.com/bimoadis/Buggy";
 
   const handleCopy = () => {
     navigator.clipboard.writeText(command);
